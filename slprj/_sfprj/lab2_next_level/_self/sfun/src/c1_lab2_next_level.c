@@ -160,7 +160,7 @@ static void sf_c1_lab2_next_level(SFc1_lab2_next_levelInstanceStruct
   real_T c1_counter;
   real_T c1_error;
   int32_T c1_i1;
-  real_T c1_way[30];
+  real_T c1_way[21];
   uint32_T c1_debug_family_var_map[13];
   real_T c1_max;
   real_T c1_el;
@@ -233,11 +233,11 @@ static void sf_c1_lab2_next_level(SFc1_lab2_next_levelInstanceStruct
   real_T *c1_b_curH;
   real_T *c1_b_counter;
   real_T *c1_b_error;
-  real_T (*c1_b_way)[30];
+  real_T (*c1_b_way)[21];
   boolean_T guard1 = FALSE;
   boolean_T guard2 = FALSE;
   boolean_T guard3 = FALSE;
-  c1_b_way = (real_T (*)[30])ssGetInputPortSignal(chartInstance->S, 8);
+  c1_b_way = (real_T (*)[21])ssGetInputPortSignal(chartInstance->S, 8);
   c1_b_error = (real_T *)ssGetInputPortSignal(chartInstance->S, 7);
   c1_b_counter = (real_T *)ssGetInputPortSignal(chartInstance->S, 6);
   c1_b_curH = (real_T *)ssGetInputPortSignal(chartInstance->S, 5);
@@ -256,7 +256,7 @@ static void sf_c1_lab2_next_level(SFc1_lab2_next_levelInstanceStruct
   _SFD_DATA_RANGE_CHECK(*c1_b_curH, 5U);
   _SFD_DATA_RANGE_CHECK(*c1_b_counter, 6U);
   _SFD_DATA_RANGE_CHECK(*c1_b_error, 7U);
-  for (c1_i0 = 0; c1_i0 < 30; c1_i0++) {
+  for (c1_i0 = 0; c1_i0 < 21; c1_i0++) {
     _SFD_DATA_RANGE_CHECK((*c1_b_way)[c1_i0], 8U);
   }
 
@@ -278,7 +278,7 @@ static void sf_c1_lab2_next_level(SFc1_lab2_next_levelInstanceStruct
   c1_curH = c1_f_hoistedGlobal;
   c1_counter = c1_g_hoistedGlobal;
   c1_error = c1_h_hoistedGlobal;
-  for (c1_i1 = 0; c1_i1 < 30; c1_i1++) {
+  for (c1_i1 = 0; c1_i1 < 21; c1_i1++) {
     c1_way[c1_i1] = (*c1_b_way)[c1_i1];
   }
 
@@ -305,7 +305,7 @@ static void sf_c1_lab2_next_level(SFc1_lab2_next_levelInstanceStruct
   _SFD_EML_CALL(0U, chartInstance->c1_sfEvent, 3);
   _SFD_EML_CALL(0U, chartInstance->c1_sfEvent, 4);
   _SFD_EML_CALL(0U, chartInstance->c1_sfEvent, 6);
-  c1_max = 10.0;
+  c1_max = 7.0;
   c1_el = 3.0;
   _SFD_EML_CALL(0U, chartInstance->c1_sfEvent, 8);
   c1_x = c1_etalX - c1_curX;
@@ -365,7 +365,7 @@ static void sf_c1_lab2_next_level(SFc1_lab2_next_levelInstanceStruct
           sf_mex_assign(&c1_h_y, sf_mex_create("y", c1_e_u, 10, 0U, 1U, 0U, 2, 1,
             5), FALSE);
           c1_f_u = c1_way[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("way",
-            (int32_T)_SFD_INTEGER_CHECK("counter", c1_counter), 1, 10, 1, 0) - 1];
+            (int32_T)_SFD_INTEGER_CHECK("counter", c1_counter), 1, 7, 1, 0) - 1];
           c1_i_y = NULL;
           sf_mex_assign(&c1_i_y, sf_mex_create("y", &c1_f_u, 0, 0U, 0U, 0U, 0),
                         FALSE);
@@ -387,7 +387,7 @@ static void sf_c1_lab2_next_level(SFc1_lab2_next_levelInstanceStruct
           sf_mex_assign(&c1_k_y, sf_mex_create("y", c1_h_u, 10, 0U, 1U, 0U, 2, 1,
             5), FALSE);
           c1_i_u = c1_way[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("way",
-            (int32_T)_SFD_INTEGER_CHECK("counter", c1_counter), 1, 10, 1, 0) + 9];
+            (int32_T)_SFD_INTEGER_CHECK("counter", c1_counter), 1, 7, 1, 0) + 6];
           c1_l_y = NULL;
           sf_mex_assign(&c1_l_y, sf_mex_create("y", &c1_i_u, 0, 0U, 0U, 0U, 0),
                         FALSE);
@@ -409,8 +409,7 @@ static void sf_c1_lab2_next_level(SFc1_lab2_next_levelInstanceStruct
           sf_mex_assign(&c1_n_y, sf_mex_create("y", c1_k_u, 10, 0U, 1U, 0U, 2, 1,
             5), FALSE);
           c1_l_u = c1_way[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("way",
-            (int32_T)_SFD_INTEGER_CHECK("counter", c1_counter), 1, 10, 1, 0) +
-            19];
+            (int32_T)_SFD_INTEGER_CHECK("counter", c1_counter), 1, 7, 1, 0) + 13];
           c1_o_y = NULL;
           sf_mex_assign(&c1_o_y, sf_mex_create("y", &c1_l_u, 0, 0U, 0U, 0U, 0),
                         FALSE);
@@ -470,36 +469,36 @@ static const mxArray *c1_sf_marshallOut(void *chartInstanceVoid, void *c1_inData
   int32_T c1_i10;
   int32_T c1_i11;
   int32_T c1_i12;
-  real_T c1_b_inData[30];
+  real_T c1_b_inData[21];
   int32_T c1_i13;
   int32_T c1_i14;
   int32_T c1_i15;
-  real_T c1_u[30];
+  real_T c1_u[21];
   const mxArray *c1_y = NULL;
   SFc1_lab2_next_levelInstanceStruct *chartInstance;
   chartInstance = (SFc1_lab2_next_levelInstanceStruct *)chartInstanceVoid;
   c1_mxArrayOutData = NULL;
   c1_i10 = 0;
   for (c1_i11 = 0; c1_i11 < 3; c1_i11++) {
-    for (c1_i12 = 0; c1_i12 < 10; c1_i12++) {
-      c1_b_inData[c1_i12 + c1_i10] = (*(real_T (*)[30])c1_inData)[c1_i12 +
+    for (c1_i12 = 0; c1_i12 < 7; c1_i12++) {
+      c1_b_inData[c1_i12 + c1_i10] = (*(real_T (*)[21])c1_inData)[c1_i12 +
         c1_i10];
     }
 
-    c1_i10 += 10;
+    c1_i10 += 7;
   }
 
   c1_i13 = 0;
   for (c1_i14 = 0; c1_i14 < 3; c1_i14++) {
-    for (c1_i15 = 0; c1_i15 < 10; c1_i15++) {
+    for (c1_i15 = 0; c1_i15 < 7; c1_i15++) {
       c1_u[c1_i15 + c1_i13] = c1_b_inData[c1_i15 + c1_i13];
     }
 
-    c1_i13 += 10;
+    c1_i13 += 7;
   }
 
   c1_y = NULL;
-  sf_mex_assign(&c1_y, sf_mex_create("y", c1_u, 0, 0U, 1U, 0U, 2, 10, 3), FALSE);
+  sf_mex_assign(&c1_y, sf_mex_create("y", c1_u, 0, 0U, 1U, 0U, 2, 7, 3), FALSE);
   sf_mex_assign(&c1_mxArrayOutData, c1_y, FALSE);
   return c1_mxArrayOutData;
 }
@@ -709,10 +708,10 @@ extern void utFree(void*);
 
 void sf_c1_lab2_next_level_get_check_sum(mxArray *plhs[])
 {
-  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(142906U);
-  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2920589824U);
-  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(1217425748U);
-  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(3127645875U);
+  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(2614801153U);
+  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2628072549U);
+  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(156437944U);
+  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(4256039086U);
 }
 
 mxArray *sf_c1_lab2_next_level_get_autoinheritance_info(void)
@@ -724,7 +723,7 @@ mxArray *sf_c1_lab2_next_level_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("yJqebdwGkzo5eeySb8f8zE");
+    mxArray *mxChecksum = mxCreateString("OOLtbgBMxZDxDsAB2aWEBB");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -888,7 +887,7 @@ mxArray *sf_c1_lab2_next_level_get_autoinheritance_info(void)
     {
       mxArray *mxSize = mxCreateDoubleMatrix(1,2,mxREAL);
       double *pr = mxGetPr(mxSize);
-      pr[0] = (double)(10);
+      pr[0] = (double)(7);
       pr[1] = (double)(3);
       mxSetField(mxData,8,"size",mxSize);
     }
@@ -1051,7 +1050,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
         {
           unsigned int dimVector[2];
-          dimVector[0]= 10;
+          dimVector[0]= 7;
           dimVector[1]= 3;
           _SFD_SET_DATA_COMPILED_PROPS(8,SF_DOUBLE,2,&(dimVector[0]),0,0,0,0.0,
             1.0,0,0,(MexFcnForType)c1_sf_marshallOut,(MexInFcnForType)NULL);
@@ -1066,8 +1065,8 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
           real_T *c1_curH;
           real_T *c1_counter;
           real_T *c1_error;
-          real_T (*c1_way)[30];
-          c1_way = (real_T (*)[30])ssGetInputPortSignal(chartInstance->S, 8);
+          real_T (*c1_way)[21];
+          c1_way = (real_T (*)[21])ssGetInputPortSignal(chartInstance->S, 8);
           c1_error = (real_T *)ssGetInputPortSignal(chartInstance->S, 7);
           c1_counter = (real_T *)ssGetInputPortSignal(chartInstance->S, 6);
           c1_curH = (real_T *)ssGetInputPortSignal(chartInstance->S, 5);
@@ -1097,7 +1096,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
 static const char* sf_get_instance_specialization(void)
 {
-  return "0tnL84IOrnwhSS3SB4KvND";
+  return "dS1MItcQYiUXcN6aqDyO2";
 }
 
 static void sf_opaque_initialize_c1_lab2_next_level(void *chartInstanceVar)
@@ -1276,10 +1275,10 @@ static void mdlSetWorkWidths_c1_lab2_next_level(SimStruct *S)
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(3621252053U));
-  ssSetChecksum1(S,(1346668803U));
-  ssSetChecksum2(S,(4053106105U));
-  ssSetChecksum3(S,(204578020U));
+  ssSetChecksum0(S,(1737817483U));
+  ssSetChecksum1(S,(1599946510U));
+  ssSetChecksum2(S,(2116927357U));
+  ssSetChecksum3(S,(3257989323U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
   ssSupportsMultipleExecInstances(S,1);
