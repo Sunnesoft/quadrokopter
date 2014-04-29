@@ -10,7 +10,6 @@
 #include "c7_lab2_next_level.h"
 #include "c9_lab2_next_level.h"
 #include "c10_lab2_next_level.h"
-#include "c11_lab2_next_level.h"
 
 /* Type Definitions */
 
@@ -74,11 +73,6 @@ unsigned int sf_lab2_next_level_method_dispatcher(SimStruct *simstructPtr,
 
   if (chartFileNumber==10) {
     c10_lab2_next_level_method_dispatcher(simstructPtr, method, data);
-    return 1;
-  }
-
-  if (chartFileNumber==11) {
-    c11_lab2_next_level_method_dispatcher(simstructPtr, method, data);
     return 1;
   }
 
@@ -154,10 +148,10 @@ unsigned int sf_lab2_next_level_process_check_sum_call( int nlhs, mxArray *
       ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(0U);
       ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(0U);
     } else if (!strcmp(commandName,"makefile")) {
-      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(4129118140U);
-      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2316186691U);
-      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2958912860U);
-      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(845706966U);
+      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(323086226U);
+      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(608312712U);
+      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(854817252U);
+      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(1410978139U);
     } else if (nrhs==3 && !strcmp(commandName,"chart")) {
       unsigned int chartFileNumber;
       chartFileNumber = (unsigned int)mxGetScalar(prhs[2]);
@@ -218,13 +212,6 @@ unsigned int sf_lab2_next_level_process_check_sum_call( int nlhs, mxArray *
           break;
         }
 
-       case 11:
-        {
-          extern void sf_c11_lab2_next_level_get_check_sum(mxArray *plhs[]);
-          sf_c11_lab2_next_level_get_check_sum(plhs);
-          break;
-        }
-
        default:
         ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(0.0);
         ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(0.0);
@@ -240,10 +227,10 @@ unsigned int sf_lab2_next_level_process_check_sum_call( int nlhs, mxArray *
       return 0;
     }
   } else {
-    ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1648021006U);
-    ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3540523487U);
-    ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(1620492958U);
-    ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(943234521U);
+    ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(657442700U);
+    ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2604210903U);
+    ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(539951013U);
+    ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(3684882515U);
   }
 
   return 1;
@@ -317,7 +304,7 @@ unsigned int sf_lab2_next_level_autoinheritance_info( int nlhs, mxArray * plhs[]
 
      case 5:
       {
-        if (strcmp(aiChksum, "Z4P9cP8MqXvCltYefwirdF") == 0) {
+        if (strcmp(aiChksum, "nAurU7x7SFev6FfGvLZIbB") == 0) {
           extern mxArray *sf_c5_lab2_next_level_get_autoinheritance_info(void);
           plhs[0] = sf_c5_lab2_next_level_get_autoinheritance_info();
           break;
@@ -341,7 +328,7 @@ unsigned int sf_lab2_next_level_autoinheritance_info( int nlhs, mxArray * plhs[]
 
      case 7:
       {
-        if (strcmp(aiChksum, "VZhDvbuyCtmH2YGXY7IEvE") == 0) {
+        if (strcmp(aiChksum, "PL2suHQ5QRwWh9lsO0xG1C") == 0) {
           extern mxArray *sf_c7_lab2_next_level_get_autoinheritance_info(void);
           plhs[0] = sf_c7_lab2_next_level_get_autoinheritance_info();
           break;
@@ -368,18 +355,6 @@ unsigned int sf_lab2_next_level_autoinheritance_info( int nlhs, mxArray * plhs[]
         if (strcmp(aiChksum, "6NdmcTyIkRJgX9Gsy5GRpB") == 0) {
           extern mxArray *sf_c10_lab2_next_level_get_autoinheritance_info(void);
           plhs[0] = sf_c10_lab2_next_level_get_autoinheritance_info();
-          break;
-        }
-
-        plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
-        break;
-      }
-
-     case 11:
-      {
-        if (strcmp(aiChksum, "deqHsgeHzApczgGUNbbXSG") == 0) {
-          extern mxArray *sf_c11_lab2_next_level_get_autoinheritance_info(void);
-          plhs[0] = sf_c11_lab2_next_level_get_autoinheritance_info();
           break;
         }
 
@@ -510,17 +485,6 @@ unsigned int sf_lab2_next_level_get_eml_resolved_functions_info( int nlhs,
         break;
       }
 
-     case 11:
-      {
-        extern const mxArray
-          *sf_c11_lab2_next_level_get_eml_resolved_functions_info(void);
-        mxArray *persistentMxArray = (mxArray *)
-          sf_c11_lab2_next_level_get_eml_resolved_functions_info();
-        plhs[0] = mxDuplicateArray(persistentMxArray);
-        mxDestroyArray(persistentMxArray);
-        break;
-      }
-
      default:
       plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
     }
@@ -585,7 +549,7 @@ unsigned int sf_lab2_next_level_third_party_uses_info( int nlhs, mxArray * plhs[
 
      case 5:
       {
-        if (strcmp(tpChksum, "H7BBUIrBqDG3pDaSY2RULC") == 0) {
+        if (strcmp(tpChksum, "hvmjT93ulDIhL4MlXGeQdG") == 0) {
           extern mxArray *sf_c5_lab2_next_level_third_party_uses_info(void);
           plhs[0] = sf_c5_lab2_next_level_third_party_uses_info();
           break;
@@ -603,7 +567,7 @@ unsigned int sf_lab2_next_level_third_party_uses_info( int nlhs, mxArray * plhs[
 
      case 7:
       {
-        if (strcmp(tpChksum, "DiPdJ2agiuKyMBosZJU22G") == 0) {
+        if (strcmp(tpChksum, "6R24wC1NieJ1PcJRFzy98B") == 0) {
           extern mxArray *sf_c7_lab2_next_level_third_party_uses_info(void);
           plhs[0] = sf_c7_lab2_next_level_third_party_uses_info();
           break;
@@ -628,15 +592,6 @@ unsigned int sf_lab2_next_level_third_party_uses_info( int nlhs, mxArray * plhs[
         }
       }
 
-     case 11:
-      {
-        if (strcmp(tpChksum, "VoRZ9v1u6PbBHs3RCdevzB") == 0) {
-          extern mxArray *sf_c11_lab2_next_level_third_party_uses_info(void);
-          plhs[0] = sf_c11_lab2_next_level_third_party_uses_info();
-          break;
-        }
-      }
-
      default:
       plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
     }
@@ -649,7 +604,7 @@ void lab2_next_level_debug_initialize(struct SfDebugInstanceStruct*
   debugInstance)
 {
   _lab2_next_levelMachineNumber_ = sf_debug_initialize_machine(debugInstance,
-    "lab2_next_level","sfun",0,9,0,0,0);
+    "lab2_next_level","sfun",0,8,0,0,0);
   sf_debug_set_machine_event_thresholds(debugInstance,
     _lab2_next_levelMachineNumber_,0,0);
   sf_debug_set_machine_data_thresholds(debugInstance,
