@@ -7,6 +7,22 @@
 #include "rtwtypes.h"
 
 /* Type Definitions */
+#ifndef typedef_c11_ResolvedFunctionInfo
+#define typedef_c11_ResolvedFunctionInfo
+
+typedef struct {
+  const char * context;
+  const char * name;
+  const char * dominantType;
+  const char * resolved;
+  uint32_T fileTimeLo;
+  uint32_T fileTimeHi;
+  uint32_T mFileTimeLo;
+  uint32_T mFileTimeHi;
+} c11_ResolvedFunctionInfo;
+
+#endif                                 /*typedef_c11_ResolvedFunctionInfo*/
+
 #ifndef typedef_SFc11_lab2_next_levelInstanceStruct
 #define typedef_SFc11_lab2_next_levelInstanceStruct
 
