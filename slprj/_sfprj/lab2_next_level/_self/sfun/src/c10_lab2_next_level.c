@@ -1,13 +1,11 @@
 /* Include files */
 
-#include <stddef.h>
-#include "blas.h"
+#include "blascompat32.h"
 #include "lab2_next_level_sfun.h"
 #include "c10_lab2_next_level.h"
 #define CHARTINSTANCE_CHARTNUMBER      (chartInstance->chartNumber)
 #define CHARTINSTANCE_INSTANCENUMBER   (chartInstance->instanceNumber)
 #include "lab2_next_level_sfun_debug_macros.h"
-#define _SF_MEX_LISTEN_FOR_CTRL_C(S)   sf_mex_listen_for_ctrl_c(sfGlobalDebugInstanceStruct,S);
 
 /* Type Definitions */
 
@@ -31,6 +29,8 @@ static void disable_c10_lab2_next_level(SFc10_lab2_next_levelInstanceStruct
   *chartInstance);
 static void c10_update_debugger_state_c10_lab2_next_level
   (SFc10_lab2_next_levelInstanceStruct *chartInstance);
+static void ext_mode_exec_c10_lab2_next_level
+  (SFc10_lab2_next_levelInstanceStruct *chartInstance);
 static const mxArray *get_sim_state_c10_lab2_next_level
   (SFc10_lab2_next_levelInstanceStruct *chartInstance);
 static void set_sim_state_c10_lab2_next_level
@@ -42,8 +42,6 @@ static void sf_c10_lab2_next_level(SFc10_lab2_next_levelInstanceStruct
 static void c10_chartstep_c10_lab2_next_level
   (SFc10_lab2_next_levelInstanceStruct *chartInstance);
 static void initSimStructsc10_lab2_next_level
-  (SFc10_lab2_next_levelInstanceStruct *chartInstance);
-static void registerMessagesc10_lab2_next_level
   (SFc10_lab2_next_levelInstanceStruct *chartInstance);
 static void init_script_number_translation(uint32_T c10_machineNumber, uint32_T
   c10_chartNumber);
@@ -80,8 +78,8 @@ static int32_T c10_f_emlrt_marshallIn(SFc10_lab2_next_levelInstanceStruct
 static void c10_d_sf_marshallIn(void *chartInstanceVoid, const mxArray
   *c10_mxArrayInData, const char_T *c10_varName, void *c10_outData);
 static uint8_T c10_g_emlrt_marshallIn(SFc10_lab2_next_levelInstanceStruct
-  *chartInstance, const mxArray *c10_b_is_active_c10_lab2_next_level, const
-  char_T *c10_identifier);
+  *chartInstance, const mxArray *c10_is_active_c10_lab2_next_level, const char_T
+  *c10_identifier);
 static uint8_T c10_h_emlrt_marshallIn(SFc10_lab2_next_levelInstanceStruct
   *chartInstance, const mxArray *c10_u, const emlrtMsgIdentifier *c10_parentId);
 static void init_dsm_address_info(SFc10_lab2_next_levelInstanceStruct
@@ -91,9 +89,13 @@ static void init_dsm_address_info(SFc10_lab2_next_levelInstanceStruct
 static void initialize_c10_lab2_next_level(SFc10_lab2_next_levelInstanceStruct
   *chartInstance)
 {
-  chartInstance->c10_sfEvent = CALL_EVENT;
+  int32_T *c10_sfEvent;
+  uint8_T *c10_is_active_c10_lab2_next_level;
+  c10_is_active_c10_lab2_next_level = (uint8_T *)ssGetDWork(chartInstance->S, 3);
+  c10_sfEvent = (int32_T *)ssGetDWork(chartInstance->S, 0);
+  *c10_sfEvent = CALL_EVENT;
   _sfTime_ = (real_T)ssGetT(chartInstance->S);
-  chartInstance->c10_is_active_c10_lab2_next_level = 0U;
+  *c10_is_active_c10_lab2_next_level = 0U;
 }
 
 static void initialize_params_c10_lab2_next_level
@@ -118,6 +120,12 @@ static void c10_update_debugger_state_c10_lab2_next_level
 {
 }
 
+static void ext_mode_exec_c10_lab2_next_level
+  (SFc10_lab2_next_levelInstanceStruct *chartInstance)
+{
+  c10_update_debugger_state_c10_lab2_next_level(chartInstance);
+}
+
 static const mxArray *get_sim_state_c10_lab2_next_level
   (SFc10_lab2_next_levelInstanceStruct *chartInstance)
 {
@@ -138,9 +146,11 @@ static const mxArray *get_sim_state_c10_lab2_next_level
   real_T *c10_xs;
   real_T *c10_ys;
   real_T *c10_zs;
+  uint8_T *c10_is_active_c10_lab2_next_level;
   c10_zs = (real_T *)ssGetOutputPortSignal(chartInstance->S, 3);
   c10_ys = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
   c10_xs = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
+  c10_is_active_c10_lab2_next_level = (uint8_T *)ssGetDWork(chartInstance->S, 3);
   c10_st = NULL;
   c10_st = NULL;
   c10_y = NULL;
@@ -160,7 +170,7 @@ static const mxArray *get_sim_state_c10_lab2_next_level
   c10_d_y = NULL;
   sf_mex_assign(&c10_d_y, sf_mex_create("y", &c10_c_u, 0, 0U, 0U, 0U, 0), FALSE);
   sf_mex_setcell(c10_y, 2, c10_d_y);
-  c10_d_hoistedGlobal = chartInstance->c10_is_active_c10_lab2_next_level;
+  c10_d_hoistedGlobal = *c10_is_active_c10_lab2_next_level;
   c10_d_u = c10_d_hoistedGlobal;
   c10_e_y = NULL;
   sf_mex_assign(&c10_e_y, sf_mex_create("y", &c10_d_u, 3, 0U, 0U, 0U, 0), FALSE);
@@ -173,13 +183,17 @@ static void set_sim_state_c10_lab2_next_level
   (SFc10_lab2_next_levelInstanceStruct *chartInstance, const mxArray *c10_st)
 {
   const mxArray *c10_u;
+  boolean_T *c10_doneDoubleBufferReInit;
   real_T *c10_xs;
   real_T *c10_ys;
   real_T *c10_zs;
+  uint8_T *c10_is_active_c10_lab2_next_level;
   c10_zs = (real_T *)ssGetOutputPortSignal(chartInstance->S, 3);
   c10_ys = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
   c10_xs = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
-  chartInstance->c10_doneDoubleBufferReInit = TRUE;
+  c10_is_active_c10_lab2_next_level = (uint8_T *)ssGetDWork(chartInstance->S, 3);
+  c10_doneDoubleBufferReInit = (boolean_T *)ssGetDWork(chartInstance->S, 2);
+  *c10_doneDoubleBufferReInit = TRUE;
   c10_u = sf_mex_dup(c10_st);
   *c10_xs = c10_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c10_u,
     0)), "xs");
@@ -187,9 +201,8 @@ static void set_sim_state_c10_lab2_next_level
     1)), "ys");
   *c10_zs = c10_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c10_u,
     2)), "zs");
-  chartInstance->c10_is_active_c10_lab2_next_level = c10_g_emlrt_marshallIn
-    (chartInstance, sf_mex_dup(sf_mex_getcell(c10_u, 3)),
-     "is_active_c10_lab2_next_level");
+  *c10_is_active_c10_lab2_next_level = c10_g_emlrt_marshallIn(chartInstance,
+    sf_mex_dup(sf_mex_getcell(c10_u, 3)), "is_active_c10_lab2_next_level");
   sf_mex_destroy(&c10_u);
   c10_update_debugger_state_c10_lab2_next_level(chartInstance);
   sf_mex_destroy(&c10_st);
@@ -203,6 +216,7 @@ static void finalize_c10_lab2_next_level(SFc10_lab2_next_levelInstanceStruct
 static void sf_c10_lab2_next_level(SFc10_lab2_next_levelInstanceStruct
   *chartInstance)
 {
+  int32_T *c10_sfEvent;
   real_T *c10_roll;
   real_T *c10_pitch;
   real_T *c10_yaw;
@@ -221,8 +235,9 @@ static void sf_c10_lab2_next_level(SFc10_lab2_next_levelInstanceStruct
   c10_yaw = (real_T *)ssGetInputPortSignal(chartInstance->S, 2);
   c10_pitch = (real_T *)ssGetInputPortSignal(chartInstance->S, 1);
   c10_roll = (real_T *)ssGetInputPortSignal(chartInstance->S, 0);
+  c10_sfEvent = (int32_T *)ssGetDWork(chartInstance->S, 0);
   _sfTime_ = (real_T)ssGetT(chartInstance->S);
-  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 7U, chartInstance->c10_sfEvent);
+  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 6U, *c10_sfEvent);
   _SFD_DATA_RANGE_CHECK(*c10_roll, 0U);
   _SFD_DATA_RANGE_CHECK(*c10_pitch, 1U);
   _SFD_DATA_RANGE_CHECK(*c10_yaw, 2U);
@@ -232,9 +247,9 @@ static void sf_c10_lab2_next_level(SFc10_lab2_next_levelInstanceStruct
   _SFD_DATA_RANGE_CHECK(*c10_xs, 6U);
   _SFD_DATA_RANGE_CHECK(*c10_ys, 7U);
   _SFD_DATA_RANGE_CHECK(*c10_zs, 8U);
-  chartInstance->c10_sfEvent = CALL_EVENT;
+  *c10_sfEvent = CALL_EVENT;
   c10_chartstep_c10_lab2_next_level(chartInstance);
-  _SFD_CHECK_FOR_STATE_INCONSISTENCY(_lab2_next_levelMachineNumber_,
+  sf_debug_check_for_state_inconsistency(_lab2_next_levelMachineNumber_,
     chartInstance->chartNumber, chartInstance->instanceNumber);
 }
 
@@ -292,6 +307,7 @@ static void c10_chartstep_c10_lab2_next_level
   real_T *c10_b_xs;
   real_T *c10_b_ys;
   real_T *c10_b_zs;
+  int32_T *c10_sfEvent;
   c10_b_zs = (real_T *)ssGetOutputPortSignal(chartInstance->S, 3);
   c10_b_ys = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
   c10_b_xs = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
@@ -301,7 +317,8 @@ static void c10_chartstep_c10_lab2_next_level
   c10_b_yaw = (real_T *)ssGetInputPortSignal(chartInstance->S, 2);
   c10_b_pitch = (real_T *)ssGetInputPortSignal(chartInstance->S, 1);
   c10_b_roll = (real_T *)ssGetInputPortSignal(chartInstance->S, 0);
-  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 7U, chartInstance->c10_sfEvent);
+  c10_sfEvent = (int32_T *)ssGetDWork(chartInstance->S, 0);
+  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 6U, *c10_sfEvent);
   c10_hoistedGlobal = *c10_b_roll;
   c10_b_hoistedGlobal = *c10_b_pitch;
   c10_c_hoistedGlobal = *c10_b_yaw;
@@ -314,37 +331,37 @@ static void c10_chartstep_c10_lab2_next_level
   c10_x = c10_d_hoistedGlobal;
   c10_y = c10_e_hoistedGlobal;
   c10_z = c10_f_hoistedGlobal;
-  _SFD_SYMBOL_SCOPE_PUSH_EML(0U, 12U, 13U, c10_debug_family_names,
+  sf_debug_symbol_scope_push_eml(0U, 12U, 13U, c10_debug_family_names,
     c10_debug_family_var_map);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(c10_M, MAX_uint32_T, c10_c_sf_marshallOut,
-    c10_c_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(c10_b_M, MAX_uint32_T,
+  sf_debug_symbol_scope_add_eml_importable(c10_M, MAX_uint32_T,
+    c10_c_sf_marshallOut, c10_c_sf_marshallIn);
+  sf_debug_symbol_scope_add_eml_importable(c10_b_M, MAX_uint32_T,
     c10_b_sf_marshallOut, c10_b_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c10_nargin, 1U, c10_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml_importable(&c10_nargin, 1U, c10_sf_marshallOut,
     c10_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c10_nargout, 2U, c10_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml_importable(&c10_nargout, 2U, c10_sf_marshallOut,
     c10_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c10_roll, 3U, c10_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c10_pitch, 4U, c10_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c10_yaw, 5U, c10_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c10_x, 6U, c10_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c10_y, 7U, c10_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c10_z, 8U, c10_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c10_xs, 9U, c10_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml(&c10_roll, 3U, c10_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml(&c10_pitch, 4U, c10_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml(&c10_yaw, 5U, c10_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml(&c10_x, 6U, c10_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml(&c10_y, 7U, c10_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml(&c10_z, 8U, c10_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml_importable(&c10_xs, 9U, c10_sf_marshallOut,
     c10_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c10_ys, 10U, c10_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml_importable(&c10_ys, 10U, c10_sf_marshallOut,
     c10_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c10_zs, 11U, c10_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml_importable(&c10_zs, 11U, c10_sf_marshallOut,
     c10_sf_marshallIn);
   CV_EML_FCN(0, 0);
-  _SFD_EML_CALL(0U, chartInstance->c10_sfEvent, 5);
-  _SFD_EML_CALL(0U, chartInstance->c10_sfEvent, 7);
+  _SFD_EML_CALL(0U, *c10_sfEvent, 5);
+  _SFD_EML_CALL(0U, *c10_sfEvent, 7);
   for (c10_i0 = 0; c10_i0 < 9; c10_i0++) {
     c10_M[c10_i0] = 0.0;
   }
 
-  _SFD_SYMBOL_SWITCH(0U, 0U);
-  _SFD_EML_CALL(0U, chartInstance->c10_sfEvent, 8);
+  sf_debug_symbol_switch(0U, 0U);
+  _SFD_EML_CALL(0U, *c10_sfEvent, 8);
   c10_u = c10_roll;
   c10_b_y = NULL;
   sf_mex_assign(&c10_b_y, sf_mex_create("y", &c10_u, 0, 0U, 0U, 0U, 0), FALSE);
@@ -360,8 +377,8 @@ static void c10_chartstep_c10_lab2_next_level
     c10_M[c10_i1] = c10_dv0[c10_i1];
   }
 
-  _SFD_SYMBOL_SWITCH(0U, 0U);
-  _SFD_EML_CALL(0U, chartInstance->c10_sfEvent, 9);
+  sf_debug_symbol_switch(0U, 0U);
+  _SFD_EML_CALL(0U, *c10_sfEvent, 9);
   for (c10_i2 = 0; c10_i2 < 9; c10_i2++) {
     c10_a[c10_i2] = c10_M[c10_i2];
   }
@@ -404,27 +421,22 @@ static void c10_chartstep_c10_lab2_next_level
     }
   }
 
-  _SFD_SYMBOL_SWITCH(0U, 1U);
-  _SFD_EML_CALL(0U, chartInstance->c10_sfEvent, 11);
+  sf_debug_symbol_switch(0U, 1U);
+  _SFD_EML_CALL(0U, *c10_sfEvent, 11);
   c10_xs = c10_b_M[0];
-  _SFD_EML_CALL(0U, chartInstance->c10_sfEvent, 12);
+  _SFD_EML_CALL(0U, *c10_sfEvent, 12);
   c10_ys = c10_b_M[1];
-  _SFD_EML_CALL(0U, chartInstance->c10_sfEvent, 13);
+  _SFD_EML_CALL(0U, *c10_sfEvent, 13);
   c10_zs = c10_b_M[2];
-  _SFD_EML_CALL(0U, chartInstance->c10_sfEvent, -13);
-  _SFD_SYMBOL_SCOPE_POP();
+  _SFD_EML_CALL(0U, *c10_sfEvent, -13);
+  sf_debug_symbol_scope_pop();
   *c10_b_xs = c10_xs;
   *c10_b_ys = c10_ys;
   *c10_b_zs = c10_zs;
-  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 7U, chartInstance->c10_sfEvent);
+  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 6U, *c10_sfEvent);
 }
 
 static void initSimStructsc10_lab2_next_level
-  (SFc10_lab2_next_levelInstanceStruct *chartInstance)
-{
-}
-
-static void registerMessagesc10_lab2_next_level
   (SFc10_lab2_next_levelInstanceStruct *chartInstance)
 {
 }
@@ -643,7 +655,7 @@ const mxArray *sf_c10_lab2_next_level_get_eml_resolved_functions_info(void)
   (*c10_b_info)[0].dominantType = "double";
   (*c10_b_info)[0].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mtimes.m";
-  (*c10_b_info)[0].fileTimeLo = 1289512492U;
+  (*c10_b_info)[0].fileTimeLo = 1289508892U;
   (*c10_b_info)[0].fileTimeHi = 0U;
   (*c10_b_info)[0].mFileTimeLo = 0U;
   (*c10_b_info)[0].mFileTimeHi = 0U;
@@ -653,7 +665,7 @@ const mxArray *sf_c10_lab2_next_level_get_eml_resolved_functions_info(void)
   (*c10_b_info)[1].dominantType = "";
   (*c10_b_info)[1].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_class.m";
-  (*c10_b_info)[1].fileTimeLo = 1323163378U;
+  (*c10_b_info)[1].fileTimeLo = 1323159778U;
   (*c10_b_info)[1].fileTimeHi = 0U;
   (*c10_b_info)[1].mFileTimeLo = 0U;
   (*c10_b_info)[1].mFileTimeHi = 0U;
@@ -673,7 +685,7 @@ const mxArray *sf_c10_lab2_next_level_get_eml_resolved_functions_info(void)
   (*c10_b_info)[3].dominantType = "char";
   (*c10_b_info)[3].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/blas/eml_xgemm.m";
-  (*c10_b_info)[3].fileTimeLo = 1299069572U;
+  (*c10_b_info)[3].fileTimeLo = 1299065972U;
   (*c10_b_info)[3].fileTimeHi = 0U;
   (*c10_b_info)[3].mFileTimeLo = 0U;
   (*c10_b_info)[3].mFileTimeHi = 0U;
@@ -683,7 +695,7 @@ const mxArray *sf_c10_lab2_next_level_get_eml_resolved_functions_info(void)
   (*c10_b_info)[4].dominantType = "";
   (*c10_b_info)[4].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/blas/eml_blas_inline.m";
-  (*c10_b_info)[4].fileTimeLo = 1299069568U;
+  (*c10_b_info)[4].fileTimeLo = 1299065968U;
   (*c10_b_info)[4].fileTimeHi = 0U;
   (*c10_b_info)[4].mFileTimeLo = 0U;
   (*c10_b_info)[4].mFileTimeHi = 0U;
@@ -693,7 +705,7 @@ const mxArray *sf_c10_lab2_next_level_get_eml_resolved_functions_info(void)
   (*c10_b_info)[5].dominantType = "double";
   (*c10_b_info)[5].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mtimes.m";
-  (*c10_b_info)[5].fileTimeLo = 1289512492U;
+  (*c10_b_info)[5].fileTimeLo = 1289508892U;
   (*c10_b_info)[5].fileTimeHi = 0U;
   (*c10_b_info)[5].mFileTimeLo = 0U;
   (*c10_b_info)[5].mFileTimeHi = 0U;
@@ -703,7 +715,7 @@ const mxArray *sf_c10_lab2_next_level_get_eml_resolved_functions_info(void)
   (*c10_b_info)[6].dominantType = "";
   (*c10_b_info)[6].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_index_class.m";
-  (*c10_b_info)[6].fileTimeLo = 1323163378U;
+  (*c10_b_info)[6].fileTimeLo = 1323159778U;
   (*c10_b_info)[6].fileTimeHi = 0U;
   (*c10_b_info)[6].mFileTimeLo = 0U;
   (*c10_b_info)[6].mFileTimeHi = 0U;
@@ -723,7 +735,7 @@ const mxArray *sf_c10_lab2_next_level_get_eml_resolved_functions_info(void)
   (*c10_b_info)[8].dominantType = "char";
   (*c10_b_info)[8].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/blas/refblas/eml_refblas_xgemm.m";
-  (*c10_b_info)[8].fileTimeLo = 1299069574U;
+  (*c10_b_info)[8].fileTimeLo = 1299065974U;
   (*c10_b_info)[8].fileTimeHi = 0U;
   (*c10_b_info)[8].mFileTimeLo = 0U;
   (*c10_b_info)[8].mFileTimeHi = 0U;
@@ -820,34 +832,34 @@ static int32_T c10_f_emlrt_marshallIn(SFc10_lab2_next_levelInstanceStruct
 static void c10_d_sf_marshallIn(void *chartInstanceVoid, const mxArray
   *c10_mxArrayInData, const char_T *c10_varName, void *c10_outData)
 {
-  const mxArray *c10_b_sfEvent;
+  const mxArray *c10_sfEvent;
   const char_T *c10_identifier;
   emlrtMsgIdentifier c10_thisId;
   int32_T c10_y;
   SFc10_lab2_next_levelInstanceStruct *chartInstance;
   chartInstance = (SFc10_lab2_next_levelInstanceStruct *)chartInstanceVoid;
-  c10_b_sfEvent = sf_mex_dup(c10_mxArrayInData);
+  c10_sfEvent = sf_mex_dup(c10_mxArrayInData);
   c10_identifier = c10_varName;
   c10_thisId.fIdentifier = c10_identifier;
   c10_thisId.fParent = NULL;
-  c10_y = c10_f_emlrt_marshallIn(chartInstance, sf_mex_dup(c10_b_sfEvent),
+  c10_y = c10_f_emlrt_marshallIn(chartInstance, sf_mex_dup(c10_sfEvent),
     &c10_thisId);
-  sf_mex_destroy(&c10_b_sfEvent);
+  sf_mex_destroy(&c10_sfEvent);
   *(int32_T *)c10_outData = c10_y;
   sf_mex_destroy(&c10_mxArrayInData);
 }
 
 static uint8_T c10_g_emlrt_marshallIn(SFc10_lab2_next_levelInstanceStruct
-  *chartInstance, const mxArray *c10_b_is_active_c10_lab2_next_level, const
-  char_T *c10_identifier)
+  *chartInstance, const mxArray *c10_is_active_c10_lab2_next_level, const char_T
+  *c10_identifier)
 {
   uint8_T c10_y;
   emlrtMsgIdentifier c10_thisId;
   c10_thisId.fIdentifier = c10_identifier;
   c10_thisId.fParent = NULL;
   c10_y = c10_h_emlrt_marshallIn(chartInstance, sf_mex_dup
-    (c10_b_is_active_c10_lab2_next_level), &c10_thisId);
-  sf_mex_destroy(&c10_b_is_active_c10_lab2_next_level);
+    (c10_is_active_c10_lab2_next_level), &c10_thisId);
+  sf_mex_destroy(&c10_is_active_c10_lab2_next_level);
   return c10_y;
 }
 
@@ -868,26 +880,7 @@ static void init_dsm_address_info(SFc10_lab2_next_levelInstanceStruct
 }
 
 /* SFunction Glue Code */
-#ifdef utFree
-#undef utFree
-#endif
-
-#ifdef utMalloc
-#undef utMalloc
-#endif
-
-#ifdef __cplusplus
-
-extern "C" void *utMalloc(size_t size);
-extern "C" void utFree(void*);
-
-#else
-
-extern void *utMalloc(size_t size);
-extern void utFree(void*);
-
-#endif
-
+static uint32_T* sf_get_sfun_dwork_checksum();
 void sf_c10_lab2_next_level_get_check_sum(mxArray *plhs[])
 {
   ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(2481080415U);
@@ -905,7 +898,7 @@ mxArray *sf_c10_lab2_next_level_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("6NdmcTyIkRJgX9Gsy5GRpB");
+    mxArray *mxChecksum = mxCreateString("JheO9KrW5VBJhWBgEgKDxF");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -1106,12 +1099,6 @@ mxArray *sf_c10_lab2_next_level_get_autoinheritance_info(void)
   return(mxAutoinheritanceInfo);
 }
 
-mxArray *sf_c10_lab2_next_level_third_party_uses_info(void)
-{
-  mxArray * mxcell3p = mxCreateCellMatrix(1,0);
-  return(mxcell3p);
-}
-
 static const mxArray *sf_get_sim_state_info_c10_lab2_next_level(void)
 {
   const char *infoFields[] = { "chartChecksum", "varInfo" };
@@ -1141,8 +1128,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
       {
         unsigned int chartAlreadyPresent;
         chartAlreadyPresent = sf_debug_initialize_chart
-          (sfGlobalDebugInstanceStruct,
-           _lab2_next_levelMachineNumber_,
+          (_lab2_next_levelMachineNumber_,
            10,
            1,
            1,
@@ -1161,10 +1147,8 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
           init_script_number_translation(_lab2_next_levelMachineNumber_,
             chartInstance->chartNumber);
           sf_debug_set_chart_disable_implicit_casting
-            (sfGlobalDebugInstanceStruct,_lab2_next_levelMachineNumber_,
-             chartInstance->chartNumber,1);
-          sf_debug_set_chart_event_thresholds(sfGlobalDebugInstanceStruct,
-            _lab2_next_levelMachineNumber_,
+            (_lab2_next_levelMachineNumber_,chartInstance->chartNumber,1);
+          sf_debug_set_chart_event_thresholds(_lab2_next_levelMachineNumber_,
             chartInstance->chartNumber,
             0,
             0,
@@ -1253,20 +1237,46 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
         }
       }
     } else {
-      sf_debug_reset_current_state_configuration(sfGlobalDebugInstanceStruct,
-        _lab2_next_levelMachineNumber_,chartInstance->chartNumber,
-        chartInstance->instanceNumber);
+      sf_debug_reset_current_state_configuration(_lab2_next_levelMachineNumber_,
+        chartInstance->chartNumber,chartInstance->instanceNumber);
     }
   }
 }
 
-static const char* sf_get_instance_specialization(void)
+static const char* sf_get_instance_specialization()
 {
   return "S0XB7oGev3JDlWYZIVEjrF";
 }
 
+static void sf_check_dwork_consistency(SimStruct *S)
+{
+  if (sim_mode_is_rtw_gen(S) || sim_mode_is_external(S)) {
+    const uint32_T *sfunDWorkChecksum = sf_get_sfun_dwork_checksum();
+    mxArray *infoStruct = load_lab2_next_level_optimization_info();
+    mxArray* mxRTWDWorkChecksum = sf_get_dwork_info_from_mat_file(S,
+      sf_get_instance_specialization(), infoStruct, 10, "dworkChecksum");
+    if (mxRTWDWorkChecksum != NULL) {
+      double *pr = mxGetPr(mxRTWDWorkChecksum);
+      if ((uint32_T)pr[0] != sfunDWorkChecksum[0] ||
+          (uint32_T)pr[1] != sfunDWorkChecksum[1] ||
+          (uint32_T)pr[2] != sfunDWorkChecksum[2] ||
+          (uint32_T)pr[3] != sfunDWorkChecksum[3]) {
+        sf_mex_error_message("Code generation and simulation targets registered different sets of persistent variables for the block. "
+                             "External or Rapid Accelerator mode simulation requires code generation and simulation targets to "
+                             "register the same set of persistent variables for this block. "
+                             "This discrepancy is typically caused by MATLAB functions that have different code paths for "
+                             "simulation and code generation targets where these code paths define different sets of persistent variables. "
+                             "Please identify these code paths in the offending block and rewrite the MATLAB code so that "
+                             "the set of persistent variables is the same between simulation and code generation.");
+      }
+    }
+  }
+}
+
 static void sf_opaque_initialize_c10_lab2_next_level(void *chartInstanceVar)
 {
+  sf_check_dwork_consistency(((SFc10_lab2_next_levelInstanceStruct*)
+    chartInstanceVar)->S);
   chart_debug_initialization(((SFc10_lab2_next_levelInstanceStruct*)
     chartInstanceVar)->S,0);
   initialize_params_c10_lab2_next_level((SFc10_lab2_next_levelInstanceStruct*)
@@ -1290,6 +1300,12 @@ static void sf_opaque_disable_c10_lab2_next_level(void *chartInstanceVar)
 static void sf_opaque_gateway_c10_lab2_next_level(void *chartInstanceVar)
 {
   sf_c10_lab2_next_level((SFc10_lab2_next_levelInstanceStruct*) chartInstanceVar);
+}
+
+static void sf_opaque_ext_mode_exec_c10_lab2_next_level(void *chartInstanceVar)
+{
+  ext_mode_exec_c10_lab2_next_level((SFc10_lab2_next_levelInstanceStruct*)
+    chartInstanceVar);
 }
 
 extern const mxArray* sf_internal_get_sim_state_c10_lab2_next_level(SimStruct* S)
@@ -1359,14 +1375,15 @@ static void sf_opaque_terminate_c10_lab2_next_level(void *chartInstanceVar)
     SimStruct *S = ((SFc10_lab2_next_levelInstanceStruct*) chartInstanceVar)->S;
     if (sim_mode_is_rtw_gen(S) || sim_mode_is_external(S)) {
       sf_clear_rtw_identifier(S);
-      unload_lab2_next_level_optimization_info();
     }
 
     finalize_c10_lab2_next_level((SFc10_lab2_next_levelInstanceStruct*)
       chartInstanceVar);
-    utFree((void *)chartInstanceVar);
+    free((void *)chartInstanceVar);
     ssSetUserData(S,NULL);
   }
+
+  unload_lab2_next_level_optimization_info();
 }
 
 static void sf_opaque_init_subchart_simstructs(void *chartInstanceVar)
@@ -1391,6 +1408,33 @@ static void mdlProcessParameters_c10_lab2_next_level(SimStruct *S)
   }
 }
 
+mxArray *sf_c10_lab2_next_level_get_testpoint_info(void)
+{
+  const char *infoEncStr[] = {
+    "100 S'varName','path'{{T\"is_active_c10_lab2_next_level\",T\"is_active_c10_lab2_next_level\"}}"
+  };
+
+  mxArray *mxTpInfo = sf_mex_decode_encoded_mx_struct_array(infoEncStr, 1, 10);
+  return mxTpInfo;
+}
+
+static void sf_set_sfun_dwork_info(SimStruct *S)
+{
+  const char *dworkEncStr[] = {
+    "100 S1x4'type','isSigned','wordLength','bias','slope','exponent','isComplex','size'{{T\"int32\",,,,,,M[0],M[]},{T\"boolean\",,,,,,M[0],M[]},{T\"boolean\",,,,,,M[0],M[]},{T\"uint8\",,,,,,M[0],M[]}}"
+  };
+
+  sf_set_encoded_dwork_info(S, dworkEncStr, 4, 10);
+}
+
+static uint32_T* sf_get_sfun_dwork_checksum()
+{
+  static uint32_T checksum[4] = { 3851270630U, 3363230343U, 1651207761U,
+    946165807U };
+
+  return checksum;
+}
+
 static void mdlSetWorkWidths_c10_lab2_next_level(SimStruct *S)
 {
   if (sim_mode_is_rtw_gen(S) || sim_mode_is_external(S)) {
@@ -1406,7 +1450,6 @@ static void mdlSetWorkWidths_c10_lab2_next_level(SimStruct *S)
     ssSetNotMultipleInlinable(S,sf_rtw_info_uint_prop(S,
       sf_get_instance_specialization(),infoStruct,10,
       "gatewayCannotBeInlinedMultipleTimes"));
-    sf_update_buildInfo(S,sf_get_instance_specialization(),infoStruct,10);
     if (chartIsInlinable) {
       ssSetInputPortOptimOpts(S, 0, SS_REUSABLE_AND_LOCAL);
       ssSetInputPortOptimOpts(S, 1, SS_REUSABLE_AND_LOCAL);
@@ -1420,30 +1463,17 @@ static void mdlSetWorkWidths_c10_lab2_next_level(SimStruct *S)
         infoStruct,10,3);
     }
 
-    {
-      unsigned int outPortIdx;
-      for (outPortIdx=1; outPortIdx<=3; ++outPortIdx) {
-        ssSetOutputPortOptimizeInIR(S, outPortIdx, 1U);
-      }
-    }
-
-    {
-      unsigned int inPortIdx;
-      for (inPortIdx=0; inPortIdx < 6; ++inPortIdx) {
-        ssSetInputPortOptimizeInIR(S, inPortIdx, 1U);
-      }
-    }
-
     sf_set_rtw_dwork_info(S,sf_get_instance_specialization(),infoStruct,10);
     ssSetHasSubFunctions(S,!(chartIsInlinable));
   } else {
+    sf_set_sfun_dwork_info(S);
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(2041226308U));
-  ssSetChecksum1(S,(1357725967U));
-  ssSetChecksum2(S,(48392488U));
-  ssSetChecksum3(S,(3939395652U));
+  ssSetChecksum0(S,(3785369184U));
+  ssSetChecksum1(S,(3764540015U));
+  ssSetChecksum2(S,(929079147U));
+  ssSetChecksum3(S,(709119222U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
   ssSupportsMultipleExecInstances(S,1);
@@ -1459,7 +1489,7 @@ static void mdlRTW_c10_lab2_next_level(SimStruct *S)
 static void mdlStart_c10_lab2_next_level(SimStruct *S)
 {
   SFc10_lab2_next_levelInstanceStruct *chartInstance;
-  chartInstance = (SFc10_lab2_next_levelInstanceStruct *)utMalloc(sizeof
+  chartInstance = (SFc10_lab2_next_levelInstanceStruct *)malloc(sizeof
     (SFc10_lab2_next_levelInstanceStruct));
   memset(chartInstance, 0, sizeof(SFc10_lab2_next_levelInstanceStruct));
   if (chartInstance==NULL) {
@@ -1490,7 +1520,8 @@ static void mdlStart_c10_lab2_next_level(SimStruct *S)
   chartInstance->chartInfo.mdlStart = mdlStart_c10_lab2_next_level;
   chartInstance->chartInfo.mdlSetWorkWidths =
     mdlSetWorkWidths_c10_lab2_next_level;
-  chartInstance->chartInfo.extModeExec = NULL;
+  chartInstance->chartInfo.extModeExec =
+    sf_opaque_ext_mode_exec_c10_lab2_next_level;
   chartInstance->chartInfo.restoreLastMajorStepConfiguration = NULL;
   chartInstance->chartInfo.restoreBeforeLastMajorStepConfiguration = NULL;
   chartInstance->chartInfo.storeCurrentConfiguration = NULL;
