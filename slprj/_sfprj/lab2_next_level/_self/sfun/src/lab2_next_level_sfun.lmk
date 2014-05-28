@@ -9,6 +9,7 @@ OBJECTS = \
 	"lab2_next_level_sfun.obj"\
 	"lab2_next_level_sfun_registry.obj"\
 	"c1_lab2_next_level.obj"\
+	"c2_lab2_next_level.obj"\
 	"c5_lab2_next_level.obj"\
 	"c6_lab2_next_level.obj"\
 	"c7_lab2_next_level.obj"\
@@ -39,6 +40,8 @@ lab2_next_level_sfun_registry.obj :	"lab2_next_level_sfun_registry.c"
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) "lab2_next_level_sfun_registry.c"
 c1_lab2_next_level.obj :	"c1_lab2_next_level.c"
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c1_lab2_next_level.c"
+c2_lab2_next_level.obj :	"c2_lab2_next_level.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c2_lab2_next_level.c"
 c5_lab2_next_level.obj :	"c5_lab2_next_level.c"
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c5_lab2_next_level.c"
 c6_lab2_next_level.obj :	"c6_lab2_next_level.c"
