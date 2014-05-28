@@ -216,11 +216,7 @@ static void sf_c15_lab2_next_level(SFc15_lab2_next_levelInstanceStruct
   c15_accel = (real_T (*)[3])ssGetInputPortSignal(chartInstance->S, 1);
   c15_angles = (real_T (*)[3])ssGetInputPortSignal(chartInstance->S, 0);
   _sfTime_ = (real_T)ssGetT(chartInstance->S);
-<<<<<<< HEAD
-  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 7U, chartInstance->c15_sfEvent);
-=======
-  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 8U, *c15_sfEvent);
->>>>>>> e2e680bb07491337861c060140f75c8175538646
+  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 10U, chartInstance->c15_sfEvent);
   for (c15_i0 = 0; c15_i0 < 3; c15_i0++) {
     _SFD_DATA_RANGE_CHECK((*c15_angles)[c15_i0], 0U);
   }
@@ -294,12 +290,7 @@ static void c15_chartstep_c15_lab2_next_level
   c15_b_xs = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   c15_b_accel = (real_T (*)[3])ssGetInputPortSignal(chartInstance->S, 1);
   c15_b_angles = (real_T (*)[3])ssGetInputPortSignal(chartInstance->S, 0);
-<<<<<<< HEAD
-  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 7U, chartInstance->c15_sfEvent);
-=======
-  c15_sfEvent = (int32_T *)ssGetDWork(chartInstance->S, 0);
-  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 8U, *c15_sfEvent);
->>>>>>> e2e680bb07491337861c060140f75c8175538646
+  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 10U, chartInstance->c15_sfEvent);
   for (c15_i2 = 0; c15_i2 < 3; c15_i2++) {
     c15_angles[c15_i2] = (*c15_b_angles)[c15_i2];
   }
@@ -434,11 +425,7 @@ static void c15_chartstep_c15_lab2_next_level
   *c15_b_xs = c15_xs;
   *c15_b_ys = c15_ys;
   *c15_b_zs = c15_zs;
-<<<<<<< HEAD
-  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 7U, chartInstance->c15_sfEvent);
-=======
-  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 8U, *c15_sfEvent);
->>>>>>> e2e680bb07491337861c060140f75c8175538646
+  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 10U, chartInstance->c15_sfEvent);
 }
 
 static void initSimStructsc15_lab2_next_level

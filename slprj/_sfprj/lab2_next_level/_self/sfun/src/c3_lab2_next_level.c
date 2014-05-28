@@ -174,50 +174,38 @@ static void sf_c3_lab2_next_level(SFc3_lab2_next_levelInstanceStruct
   real_T c3_nargout = 1.0;
   real_T c3_y;
   int32_T c3_b_i;
-  real_T c3_b;
-  real_T c3_b_y;
   real_T c3_A;
   real_T c3_x;
   real_T c3_b_x;
+  real_T c3_b_y;
+  real_T c3_b;
   real_T c3_c_y;
-  real_T c3_c_x;
-  real_T c3_d_x;
+  real_T c3_a;
   real_T c3_b_b;
   real_T c3_d_y;
-  real_T c3_b_A;
-  real_T c3_e_x;
-  real_T c3_f_x;
-  real_T c3_e_y;
-  real_T c3_a;
-  real_T c3_c_b;
-  real_T c3_f_y;
   real_T c3_b_a;
+  real_T c3_c_b;
+  real_T c3_e_y;
+  real_T c3_c_x;
+  real_T c3_d_x;
   real_T c3_d_b;
-  real_T c3_g_y;
-  real_T c3_c_a;
-  real_T c3_e_b;
-  real_T c3_h_y;
-  real_T c3_g_x;
-  real_T c3_h_x;
-  real_T c3_f_b;
-  real_T c3_i_y;
-  real_T c3_c_A;
+  real_T c3_f_y;
+  real_T c3_b_A;
   real_T c3_B;
-  real_T c3_i_x;
+  real_T c3_e_x;
+  real_T c3_g_y;
+  real_T c3_f_x;
+  real_T c3_h_y;
+  real_T c3_e_b;
+  real_T c3_i_y;
+  real_T c3_c_a;
+  real_T c3_f_b;
   real_T c3_j_y;
-  real_T c3_j_x;
-  real_T c3_k_y;
-  real_T c3_d_a;
-  real_T c3_g_b;
-  real_T c3_l_y;
-  real_T c3_e_a;
-  real_T c3_h_b;
-  real_T c3_m_y;
   real_T *c3_b_wc;
-  real_T *c3_n_y;
+  real_T *c3_k_y;
   real_T (*c3_b_signal)[10];
   c3_b_wc = (real_T *)ssGetInputPortSignal(chartInstance->S, 1);
-  c3_n_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
+  c3_k_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   c3_b_signal = (real_T (*)[10])ssGetInputPortSignal(chartInstance->S, 0);
   _sfTime_ = (real_T)ssGetT(chartInstance->S);
   _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 2U, chartInstance->c3_sfEvent);
@@ -225,7 +213,7 @@ static void sf_c3_lab2_next_level(SFc3_lab2_next_levelInstanceStruct
     _SFD_DATA_RANGE_CHECK((*c3_b_signal)[c3_i0], 0U);
   }
 
-  _SFD_DATA_RANGE_CHECK(*c3_n_y, 1U);
+  _SFD_DATA_RANGE_CHECK(*c3_k_y, 1U);
   _SFD_DATA_RANGE_CHECK(*c3_b_wc, 2U);
   chartInstance->c3_sfEvent = CALL_EVENT;
   _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 2U, chartInstance->c3_sfEvent);
@@ -245,8 +233,7 @@ static void sf_c3_lab2_next_level(SFc3_lab2_next_levelInstanceStruct
     c3_sf_marshallIn);
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_k, 4U, c3_sf_marshallOut,
     c3_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_w, 5U, c3_sf_marshallOut,
-    c3_sf_marshallIn);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c3_w, 5U, c3_sf_marshallOut);
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_h, 6U, c3_sf_marshallOut,
     c3_sf_marshallIn);
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_nargin, 7U, c3_sf_marshallOut,
@@ -274,62 +261,49 @@ static void sf_c3_lab2_next_level(SFc3_lab2_next_levelInstanceStruct
     _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 10);
     c3_k = c3_i - 1.0;
     _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 11);
-    c3_b = c3_i;
-    c3_b_y = 6.2831853071795862 * c3_b;
-    c3_A = c3_b_y;
-    c3_x = c3_A;
-    c3_b_x = c3_x;
-    c3_c_y = c3_b_x / 9.0;
-    c3_c_x = c3_c_y;
-    c3_d_x = c3_c_x;
-    c3_d_x = muDoubleScalarCos(c3_d_x);
-    c3_b_b = 1.0 - c3_d_x;
-    c3_d_y = 0.46 * c3_b_b;
-    c3_w = 0.54 - c3_d_y;
+    c3_w = 1.0;
     _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 13);
     if (CV_EML_IF(0, 1, 0, c3_i != c3_s)) {
       _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 14);
-      c3_b_A = c3_wc;
-      c3_e_x = c3_b_A;
-      c3_f_x = c3_e_x;
-      c3_e_y = c3_f_x / 3.1415926535897931;
-      c3_h = 1.0 - c3_e_y;
+      c3_A = c3_wc;
+      c3_x = c3_A;
+      c3_b_x = c3_x;
+      c3_b_y = c3_b_x / 3.1415926535897931;
+      c3_h = 1.0 - c3_b_y;
       _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 15);
-      c3_a = c3_w;
-      c3_c_b = c3_h;
-      c3_f_y = c3_a * c3_c_b;
-      c3_b_a = c3_f_y;
-      c3_d_b = c3_signal[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("signal",
+      c3_b = c3_h;
+      c3_c_y = c3_b;
+      c3_a = c3_c_y;
+      c3_b_b = c3_signal[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("signal",
         (int32_T)_SFD_INTEGER_CHECK("s-k", c3_s - c3_k), 1, 10, 1, 0) - 1];
-      c3_g_y = c3_b_a * c3_d_b;
-      c3_y += c3_g_y;
+      c3_d_y = c3_a * c3_b_b;
+      c3_y += c3_d_y;
       _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 16);
     } else {
       _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 19);
-      c3_c_a = c3_wc;
-      c3_e_b = c3_k - c3_M;
-      c3_h_y = c3_c_a * c3_e_b;
-      c3_g_x = c3_h_y;
-      c3_h_x = c3_g_x;
-      c3_h_x = muDoubleScalarSin(c3_h_x);
-      c3_f_b = c3_k - c3_M;
-      c3_i_y = 3.1415926535897931 * c3_f_b;
-      c3_c_A = -c3_h_x;
-      c3_B = c3_i_y;
-      c3_i_x = c3_c_A;
-      c3_j_y = c3_B;
-      c3_j_x = c3_i_x;
-      c3_k_y = c3_j_y;
-      c3_h = c3_j_x / c3_k_y;
+      c3_b_a = c3_wc;
+      c3_c_b = c3_k - c3_M;
+      c3_e_y = c3_b_a * c3_c_b;
+      c3_c_x = c3_e_y;
+      c3_d_x = c3_c_x;
+      c3_d_x = muDoubleScalarSin(c3_d_x);
+      c3_d_b = c3_k - c3_M;
+      c3_f_y = 3.1415926535897931 * c3_d_b;
+      c3_b_A = -c3_d_x;
+      c3_B = c3_f_y;
+      c3_e_x = c3_b_A;
+      c3_g_y = c3_B;
+      c3_f_x = c3_e_x;
+      c3_h_y = c3_g_y;
+      c3_h = c3_f_x / c3_h_y;
       _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 20);
-      c3_d_a = c3_w;
-      c3_g_b = c3_h;
-      c3_l_y = c3_d_a * c3_g_b;
-      c3_e_a = c3_l_y;
-      c3_h_b = c3_signal[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("signal",
+      c3_e_b = c3_h;
+      c3_i_y = c3_e_b;
+      c3_c_a = c3_i_y;
+      c3_f_b = c3_signal[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("signal",
         (int32_T)_SFD_INTEGER_CHECK("s-k", c3_s - c3_k), 1, 10, 1, 0) - 1];
-      c3_m_y = c3_e_a * c3_h_b;
-      c3_y += c3_m_y;
+      c3_j_y = c3_c_a * c3_f_b;
+      c3_y += c3_j_y;
     }
 
     c3_b_i++;
@@ -339,7 +313,7 @@ static void sf_c3_lab2_next_level(SFc3_lab2_next_levelInstanceStruct
   CV_EML_FOR(0, 1, 0, 0);
   _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, -20);
   _SFD_SYMBOL_SCOPE_POP();
-  *c3_n_y = c3_y;
+  *c3_k_y = c3_y;
   _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 2U, chartInstance->c3_sfEvent);
   _SFD_CHECK_FOR_STATE_INCONSISTENCY(_lab2_next_levelMachineNumber_,
     chartInstance->chartNumber, chartInstance->instanceNumber);
@@ -446,102 +420,83 @@ static const mxArray *c3_b_sf_marshallOut(void *chartInstanceVoid, void
 const mxArray *sf_c3_lab2_next_level_get_eml_resolved_functions_info(void)
 {
   const mxArray *c3_nameCaptureInfo;
-  c3_ResolvedFunctionInfo c3_info[9];
-  c3_ResolvedFunctionInfo (*c3_b_info)[9];
+  c3_ResolvedFunctionInfo c3_info[7];
+  c3_ResolvedFunctionInfo (*c3_b_info)[7];
   const mxArray *c3_m0 = NULL;
   int32_T c3_i4;
   c3_ResolvedFunctionInfo *c3_r0;
   c3_nameCaptureInfo = NULL;
   c3_nameCaptureInfo = NULL;
-  c3_b_info = (c3_ResolvedFunctionInfo (*)[9])c3_info;
+  c3_b_info = (c3_ResolvedFunctionInfo (*)[7])c3_info;
   (*c3_b_info)[0].context = "";
-  (*c3_b_info)[0].name = "mtimes";
+  (*c3_b_info)[0].name = "mrdivide";
   (*c3_b_info)[0].dominantType = "double";
   (*c3_b_info)[0].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mtimes.m";
-  (*c3_b_info)[0].fileTimeLo = 1289512492U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
+  (*c3_b_info)[0].fileTimeLo = 1357944348U;
   (*c3_b_info)[0].fileTimeHi = 0U;
-  (*c3_b_info)[0].mFileTimeLo = 0U;
+  (*c3_b_info)[0].mFileTimeLo = 1319722766U;
   (*c3_b_info)[0].mFileTimeHi = 0U;
-  (*c3_b_info)[1].context = "";
-  (*c3_b_info)[1].name = "mrdivide";
+  (*c3_b_info)[1].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
+  (*c3_b_info)[1].name = "rdivide";
   (*c3_b_info)[1].dominantType = "double";
   (*c3_b_info)[1].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
-  (*c3_b_info)[1].fileTimeLo = 1357944348U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
+  (*c3_b_info)[1].fileTimeLo = 1346503188U;
   (*c3_b_info)[1].fileTimeHi = 0U;
-  (*c3_b_info)[1].mFileTimeLo = 1319722766U;
+  (*c3_b_info)[1].mFileTimeLo = 0U;
   (*c3_b_info)[1].mFileTimeHi = 0U;
   (*c3_b_info)[2].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
-  (*c3_b_info)[2].name = "rdivide";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
+  (*c3_b_info)[2].name = "eml_scalexp_compatible";
   (*c3_b_info)[2].dominantType = "double";
   (*c3_b_info)[2].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c3_b_info)[2].fileTimeLo = 1346503188U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalexp_compatible.m";
+  (*c3_b_info)[2].fileTimeLo = 1286811596U;
   (*c3_b_info)[2].fileTimeHi = 0U;
   (*c3_b_info)[2].mFileTimeLo = 0U;
   (*c3_b_info)[2].mFileTimeHi = 0U;
   (*c3_b_info)[3].context =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c3_b_info)[3].name = "eml_scalexp_compatible";
+  (*c3_b_info)[3].name = "eml_div";
   (*c3_b_info)[3].dominantType = "double";
   (*c3_b_info)[3].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalexp_compatible.m";
-  (*c3_b_info)[3].fileTimeLo = 1286811596U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_div.m";
+  (*c3_b_info)[3].fileTimeLo = 1313340610U;
   (*c3_b_info)[3].fileTimeHi = 0U;
   (*c3_b_info)[3].mFileTimeLo = 0U;
   (*c3_b_info)[3].mFileTimeHi = 0U;
-  (*c3_b_info)[4].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c3_b_info)[4].name = "eml_div";
+  (*c3_b_info)[4].context = "";
+  (*c3_b_info)[4].name = "mtimes";
   (*c3_b_info)[4].dominantType = "double";
   (*c3_b_info)[4].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_div.m";
-  (*c3_b_info)[4].fileTimeLo = 1313340610U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mtimes.m";
+  (*c3_b_info)[4].fileTimeLo = 1289512492U;
   (*c3_b_info)[4].fileTimeHi = 0U;
   (*c3_b_info)[4].mFileTimeLo = 0U;
   (*c3_b_info)[4].mFileTimeHi = 0U;
   (*c3_b_info)[5].context = "";
-  (*c3_b_info)[5].name = "cos";
+  (*c3_b_info)[5].name = "sin";
   (*c3_b_info)[5].dominantType = "double";
   (*c3_b_info)[5].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/cos.m";
-  (*c3_b_info)[5].fileTimeLo = 1343823172U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
+  (*c3_b_info)[5].fileTimeLo = 1343823186U;
   (*c3_b_info)[5].fileTimeHi = 0U;
   (*c3_b_info)[5].mFileTimeLo = 0U;
   (*c3_b_info)[5].mFileTimeHi = 0U;
   (*c3_b_info)[6].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/cos.m";
-  (*c3_b_info)[6].name = "eml_scalar_cos";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
+  (*c3_b_info)[6].name = "eml_scalar_sin";
   (*c3_b_info)[6].dominantType = "double";
   (*c3_b_info)[6].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_cos.m";
-  (*c3_b_info)[6].fileTimeLo = 1286811522U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_sin.m";
+  (*c3_b_info)[6].fileTimeLo = 1286811536U;
   (*c3_b_info)[6].fileTimeHi = 0U;
   (*c3_b_info)[6].mFileTimeLo = 0U;
   (*c3_b_info)[6].mFileTimeHi = 0U;
-  (*c3_b_info)[7].context = "";
-  (*c3_b_info)[7].name = "sin";
-  (*c3_b_info)[7].dominantType = "double";
-  (*c3_b_info)[7].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
-  (*c3_b_info)[7].fileTimeLo = 1343823186U;
-  (*c3_b_info)[7].fileTimeHi = 0U;
-  (*c3_b_info)[7].mFileTimeLo = 0U;
-  (*c3_b_info)[7].mFileTimeHi = 0U;
-  (*c3_b_info)[8].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
-  (*c3_b_info)[8].name = "eml_scalar_sin";
-  (*c3_b_info)[8].dominantType = "double";
-  (*c3_b_info)[8].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_sin.m";
-  (*c3_b_info)[8].fileTimeLo = 1286811536U;
-  (*c3_b_info)[8].fileTimeHi = 0U;
-  (*c3_b_info)[8].mFileTimeLo = 0U;
-  (*c3_b_info)[8].mFileTimeHi = 0U;
-  sf_mex_assign(&c3_m0, sf_mex_createstruct("nameCaptureInfo", 1, 9), FALSE);
-  for (c3_i4 = 0; c3_i4 < 9; c3_i4++) {
+  sf_mex_assign(&c3_m0, sf_mex_createstruct("nameCaptureInfo", 1, 7), FALSE);
+  for (c3_i4 = 0; c3_i4 < 7; c3_i4++) {
     c3_r0 = &c3_info[c3_i4];
     sf_mex_addfield(c3_m0, sf_mex_create("nameCaptureInfo", c3_r0->context, 15,
       0U, 0U, 0U, 2, 1, strlen(c3_r0->context)), "context", "nameCaptureInfo",
@@ -669,10 +624,10 @@ extern void utFree(void*);
 
 void sf_c3_lab2_next_level_get_check_sum(mxArray *plhs[])
 {
-  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1659045213U);
-  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(521626396U);
-  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(167945930U);
-  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(1918425068U);
+  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3557339849U);
+  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2693185982U);
+  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(1436294798U);
+  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2986635900U);
 }
 
 mxArray *sf_c3_lab2_next_level_get_autoinheritance_info(void)
@@ -684,7 +639,7 @@ mxArray *sf_c3_lab2_next_level_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("KNHWRCpGxuOG7abLiutViF");
+    mxArray *mxChecksum = mxCreateString("jXCiqRXtpmKqR30xY9snCE");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -852,9 +807,9 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
         /* Initialization of MATLAB Function Model Coverage */
         _SFD_CV_INIT_EML(0,1,1,1,0,0,0,1,0,0,0);
-        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,309);
-        _SFD_CV_INIT_EML_IF(0,1,0,154,164,-1,-2);
-        _SFD_CV_INIT_EML_FOR(0,1,0,77,89,309);
+        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,277);
+        _SFD_CV_INIT_EML_IF(0,1,0,122,132,-1,-2);
+        _SFD_CV_INIT_EML_FOR(0,1,0,77,89,277);
         _SFD_TRANS_COV_WTS(0,0,0,1,0);
         if (chartAlreadyPresent==0) {
           _SFD_TRANS_COV_MAPS(0,
@@ -898,7 +853,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
 static const char* sf_get_instance_specialization(void)
 {
-  return "Kc7Z49wqYY9biFdKM6dBLD";
+  return "XJtCwoNhTkrbDVsoVz2uyG";
 }
 
 static void sf_opaque_initialize_c3_lab2_next_level(void *chartInstanceVar)
@@ -1072,10 +1027,10 @@ static void mdlSetWorkWidths_c3_lab2_next_level(SimStruct *S)
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(3060803797U));
-  ssSetChecksum1(S,(2445606701U));
-  ssSetChecksum2(S,(2626229335U));
-  ssSetChecksum3(S,(1014666957U));
+  ssSetChecksum0(S,(167058084U));
+  ssSetChecksum1(S,(4094593174U));
+  ssSetChecksum2(S,(2158986303U));
+  ssSetChecksum3(S,(2984293827U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
   ssSupportsMultipleExecInstances(S,1);
