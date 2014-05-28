@@ -1,14 +1,12 @@
 /* Include files */
 
-#include <stddef.h>
-#include "blas.h"
+#include "blascompat32.h"
 #include "lab2_next_level_sfun.h"
 #include "c19_lab2_next_level.h"
 #include "mwmathutil.h"
 #define CHARTINSTANCE_CHARTNUMBER      (chartInstance->chartNumber)
 #define CHARTINSTANCE_INSTANCENUMBER   (chartInstance->instanceNumber)
 #include "lab2_next_level_sfun_debug_macros.h"
-#define _SF_MEX_LISTEN_FOR_CTRL_C(S)   sf_mex_listen_for_ctrl_c(sfGlobalDebugInstanceStruct,S);
 
 /* Type Definitions */
 
@@ -18,8 +16,8 @@
 /* Variable Declarations */
 
 /* Variable Definitions */
-static const char * c19_debug_family_names[12] = { "s", "e", "M", "i", "k", "w",
-  "h", "nargin", "nargout", "signal", "wc", "y" };
+static const char * c19_debug_family_names[11] = { "s", "e", "M", "k", "w", "h",
+  "nargin", "nargout", "signal", "wc", "y" };
 
 /* Function Declarations */
 static void initialize_c19_lab2_next_level(SFc19_lab2_next_levelInstanceStruct
@@ -32,6 +30,8 @@ static void disable_c19_lab2_next_level(SFc19_lab2_next_levelInstanceStruct
   *chartInstance);
 static void c19_update_debugger_state_c19_lab2_next_level
   (SFc19_lab2_next_levelInstanceStruct *chartInstance);
+static void ext_mode_exec_c19_lab2_next_level
+  (SFc19_lab2_next_levelInstanceStruct *chartInstance);
 static const mxArray *get_sim_state_c19_lab2_next_level
   (SFc19_lab2_next_levelInstanceStruct *chartInstance);
 static void set_sim_state_c19_lab2_next_level
@@ -41,8 +41,6 @@ static void finalize_c19_lab2_next_level(SFc19_lab2_next_levelInstanceStruct
 static void sf_c19_lab2_next_level(SFc19_lab2_next_levelInstanceStruct
   *chartInstance);
 static void initSimStructsc19_lab2_next_level
-  (SFc19_lab2_next_levelInstanceStruct *chartInstance);
-static void registerMessagesc19_lab2_next_level
   (SFc19_lab2_next_levelInstanceStruct *chartInstance);
 static void init_script_number_translation(uint32_T c19_machineNumber, uint32_T
   c19_chartNumber);
@@ -63,8 +61,8 @@ static int32_T c19_c_emlrt_marshallIn(SFc19_lab2_next_levelInstanceStruct
 static void c19_b_sf_marshallIn(void *chartInstanceVoid, const mxArray
   *c19_mxArrayInData, const char_T *c19_varName, void *c19_outData);
 static uint8_T c19_d_emlrt_marshallIn(SFc19_lab2_next_levelInstanceStruct
-  *chartInstance, const mxArray *c19_b_is_active_c19_lab2_next_level, const
-  char_T *c19_identifier);
+  *chartInstance, const mxArray *c19_is_active_c19_lab2_next_level, const char_T
+  *c19_identifier);
 static uint8_T c19_e_emlrt_marshallIn(SFc19_lab2_next_levelInstanceStruct
   *chartInstance, const mxArray *c19_u, const emlrtMsgIdentifier *c19_parentId);
 static void init_dsm_address_info(SFc19_lab2_next_levelInstanceStruct
@@ -74,9 +72,13 @@ static void init_dsm_address_info(SFc19_lab2_next_levelInstanceStruct
 static void initialize_c19_lab2_next_level(SFc19_lab2_next_levelInstanceStruct
   *chartInstance)
 {
-  chartInstance->c19_sfEvent = CALL_EVENT;
+  int32_T *c19_sfEvent;
+  uint8_T *c19_is_active_c19_lab2_next_level;
+  c19_is_active_c19_lab2_next_level = (uint8_T *)ssGetDWork(chartInstance->S, 3);
+  c19_sfEvent = (int32_T *)ssGetDWork(chartInstance->S, 0);
+  *c19_sfEvent = CALL_EVENT;
   _sfTime_ = (real_T)ssGetT(chartInstance->S);
-  chartInstance->c19_is_active_c19_lab2_next_level = 0U;
+  *c19_is_active_c19_lab2_next_level = 0U;
 }
 
 static void initialize_params_c19_lab2_next_level
@@ -101,6 +103,12 @@ static void c19_update_debugger_state_c19_lab2_next_level
 {
 }
 
+static void ext_mode_exec_c19_lab2_next_level
+  (SFc19_lab2_next_levelInstanceStruct *chartInstance)
+{
+  c19_update_debugger_state_c19_lab2_next_level(chartInstance);
+}
+
 static const mxArray *get_sim_state_c19_lab2_next_level
   (SFc19_lab2_next_levelInstanceStruct *chartInstance)
 {
@@ -113,7 +121,9 @@ static const mxArray *get_sim_state_c19_lab2_next_level
   uint8_T c19_b_u;
   const mxArray *c19_c_y = NULL;
   real_T *c19_d_y;
+  uint8_T *c19_is_active_c19_lab2_next_level;
   c19_d_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
+  c19_is_active_c19_lab2_next_level = (uint8_T *)ssGetDWork(chartInstance->S, 3);
   c19_st = NULL;
   c19_st = NULL;
   c19_y = NULL;
@@ -123,7 +133,7 @@ static const mxArray *get_sim_state_c19_lab2_next_level
   c19_b_y = NULL;
   sf_mex_assign(&c19_b_y, sf_mex_create("y", &c19_u, 0, 0U, 0U, 0U, 0), FALSE);
   sf_mex_setcell(c19_y, 0, c19_b_y);
-  c19_b_hoistedGlobal = chartInstance->c19_is_active_c19_lab2_next_level;
+  c19_b_hoistedGlobal = *c19_is_active_c19_lab2_next_level;
   c19_b_u = c19_b_hoistedGlobal;
   c19_c_y = NULL;
   sf_mex_assign(&c19_c_y, sf_mex_create("y", &c19_b_u, 3, 0U, 0U, 0U, 0), FALSE);
@@ -136,15 +146,18 @@ static void set_sim_state_c19_lab2_next_level
   (SFc19_lab2_next_levelInstanceStruct *chartInstance, const mxArray *c19_st)
 {
   const mxArray *c19_u;
+  boolean_T *c19_doneDoubleBufferReInit;
   real_T *c19_y;
+  uint8_T *c19_is_active_c19_lab2_next_level;
   c19_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
-  chartInstance->c19_doneDoubleBufferReInit = TRUE;
+  c19_is_active_c19_lab2_next_level = (uint8_T *)ssGetDWork(chartInstance->S, 3);
+  c19_doneDoubleBufferReInit = (boolean_T *)ssGetDWork(chartInstance->S, 2);
+  *c19_doneDoubleBufferReInit = TRUE;
   c19_u = sf_mex_dup(c19_st);
   *c19_y = c19_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c19_u,
     0)), "y");
-  chartInstance->c19_is_active_c19_lab2_next_level = c19_d_emlrt_marshallIn
-    (chartInstance, sf_mex_dup(sf_mex_getcell(c19_u, 1)),
-     "is_active_c19_lab2_next_level");
+  *c19_is_active_c19_lab2_next_level = c19_d_emlrt_marshallIn(chartInstance,
+    sf_mex_dup(sf_mex_getcell(c19_u, 1)), "is_active_c19_lab2_next_level");
   sf_mex_destroy(&c19_u);
   c19_update_debugger_state_c19_lab2_next_level(chartInstance);
   sf_mex_destroy(&c19_st);
@@ -163,18 +176,18 @@ static void sf_c19_lab2_next_level(SFc19_lab2_next_levelInstanceStruct
   int32_T c19_i1;
   real_T c19_signal[10];
   real_T c19_wc;
-  uint32_T c19_debug_family_var_map[12];
+  uint32_T c19_debug_family_var_map[11];
   real_T c19_s;
   real_T c19_e;
   real_T c19_M;
-  real_T c19_i;
   real_T c19_k;
   real_T c19_w;
   real_T c19_h;
   real_T c19_nargin = 2.0;
   real_T c19_nargout = 1.0;
   real_T c19_y;
-  int32_T c19_b_i;
+  int32_T c19_i;
+  real_T c19_b_i;
   real_T c19_A;
   real_T c19_x;
   real_T c19_b_x;
@@ -204,84 +217,83 @@ static void sf_c19_lab2_next_level(SFc19_lab2_next_levelInstanceStruct
   real_T c19_j_y;
   real_T *c19_b_wc;
   real_T *c19_k_y;
+  int32_T *c19_sfEvent;
   real_T (*c19_b_signal)[10];
   c19_b_wc = (real_T *)ssGetInputPortSignal(chartInstance->S, 1);
   c19_k_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   c19_b_signal = (real_T (*)[10])ssGetInputPortSignal(chartInstance->S, 0);
+  c19_sfEvent = (int32_T *)ssGetDWork(chartInstance->S, 0);
   _sfTime_ = (real_T)ssGetT(chartInstance->S);
-  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 14U, chartInstance->c19_sfEvent);
+  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 12U, *c19_sfEvent);
   for (c19_i0 = 0; c19_i0 < 10; c19_i0++) {
     _SFD_DATA_RANGE_CHECK((*c19_b_signal)[c19_i0], 0U);
   }
 
   _SFD_DATA_RANGE_CHECK(*c19_k_y, 1U);
   _SFD_DATA_RANGE_CHECK(*c19_b_wc, 2U);
-  chartInstance->c19_sfEvent = CALL_EVENT;
-  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 14U, chartInstance->c19_sfEvent);
+  *c19_sfEvent = CALL_EVENT;
+  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 12U, *c19_sfEvent);
   c19_hoistedGlobal = *c19_b_wc;
   for (c19_i1 = 0; c19_i1 < 10; c19_i1++) {
     c19_signal[c19_i1] = (*c19_b_signal)[c19_i1];
   }
 
   c19_wc = c19_hoistedGlobal;
-  _SFD_SYMBOL_SCOPE_PUSH_EML(0U, 12U, 12U, c19_debug_family_names,
+  sf_debug_symbol_scope_push_eml(0U, 11U, 11U, c19_debug_family_names,
     c19_debug_family_var_map);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c19_s, 0U, c19_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c19_e, 1U, c19_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml(&c19_s, 0U, c19_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml_importable(&c19_e, 1U, c19_sf_marshallOut,
     c19_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c19_M, 2U, c19_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c19_i, 3U, c19_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml(&c19_M, 2U, c19_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml_importable(&c19_k, 3U, c19_sf_marshallOut,
     c19_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c19_k, 4U, c19_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml(&c19_w, 4U, c19_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml_importable(&c19_h, 5U, c19_sf_marshallOut,
     c19_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c19_w, 5U, c19_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c19_h, 6U, c19_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml_importable(&c19_nargin, 6U, c19_sf_marshallOut,
     c19_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c19_nargin, 7U, c19_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml_importable(&c19_nargout, 7U, c19_sf_marshallOut,
     c19_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c19_nargout, 8U, c19_sf_marshallOut,
-    c19_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML(c19_signal, 9U, c19_b_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c19_wc, 10U, c19_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c19_y, 11U, c19_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml(c19_signal, 8U, c19_b_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml(&c19_wc, 9U, c19_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml_importable(&c19_y, 10U, c19_sf_marshallOut,
     c19_sf_marshallIn);
   CV_EML_FCN(0, 0);
-  _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, 4);
+  _SFD_EML_CALL(0U, *c19_sfEvent, 4);
   c19_s = 10.0;
   c19_e = 1.0;
-  _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, 5);
+  _SFD_EML_CALL(0U, *c19_sfEvent, 5);
   c19_y = 0.0;
-  _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, 7);
+  _SFD_EML_CALL(0U, *c19_sfEvent, 7);
   c19_M = 10.0;
-  _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, 9);
-  c19_i = 1.0;
-  c19_b_i = 0;
-  while (c19_b_i < 10) {
-    c19_i = 1.0 + (real_T)c19_b_i;
+  _SFD_EML_CALL(0U, *c19_sfEvent, 9);
+  c19_i = 0;
+  while (c19_i < 10) {
+    c19_b_i = 1.0 + (real_T)c19_i;
     CV_EML_FOR(0, 1, 0, 1);
-    _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, 10);
-    c19_k = c19_i - 1.0;
-    _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, 11);
+    _SFD_EML_CALL(0U, *c19_sfEvent, 10);
+    c19_k = c19_b_i - 1.0;
+    _SFD_EML_CALL(0U, *c19_sfEvent, 11);
     c19_w = 1.0;
-    _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, 13);
-    if (CV_EML_IF(0, 1, 0, c19_i != c19_s)) {
-      _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, 14);
+    _SFD_EML_CALL(0U, *c19_sfEvent, 13);
+    if (CV_EML_IF(0, 1, 0, c19_b_i != c19_s)) {
+      _SFD_EML_CALL(0U, *c19_sfEvent, 14);
       c19_A = c19_wc;
       c19_x = c19_A;
       c19_b_x = c19_x;
       c19_b_y = c19_b_x / 3.1415926535897931;
       c19_h = 1.0 - c19_b_y;
-      _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, 15);
+      _SFD_EML_CALL(0U, *c19_sfEvent, 15);
       c19_b = c19_h;
       c19_c_y = c19_b;
       c19_a = c19_c_y;
-      c19_b_b = c19_signal[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("signal",
-        (int32_T)_SFD_INTEGER_CHECK("s-k", c19_s - c19_k), 1, 10, 1, 0) - 1];
+      c19_b_b = c19_signal[_SFD_EML_ARRAY_BOUNDS_CHECK("signal", (int32_T)
+        _SFD_INTEGER_CHECK("s-k", c19_s - c19_k), 1, 10, 1, 0) - 1];
       c19_d_y = c19_a * c19_b_b;
       c19_y += c19_d_y;
-      _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, 16);
+      _SFD_EML_CALL(0U, *c19_sfEvent, 16);
     } else {
-      _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, 19);
+      _SFD_EML_CALL(0U, *c19_sfEvent, 19);
       c19_b_a = c19_wc;
       c19_c_b = c19_k - c19_M;
       c19_e_y = c19_b_a * c19_c_b;
@@ -297,35 +309,30 @@ static void sf_c19_lab2_next_level(SFc19_lab2_next_levelInstanceStruct
       c19_f_x = c19_e_x;
       c19_h_y = c19_g_y;
       c19_h = c19_f_x / c19_h_y;
-      _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, 20);
+      _SFD_EML_CALL(0U, *c19_sfEvent, 20);
       c19_e_b = c19_h;
       c19_i_y = c19_e_b;
       c19_c_a = c19_i_y;
-      c19_f_b = c19_signal[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("signal",
-        (int32_T)_SFD_INTEGER_CHECK("s-k", c19_s - c19_k), 1, 10, 1, 0) - 1];
+      c19_f_b = c19_signal[_SFD_EML_ARRAY_BOUNDS_CHECK("signal", (int32_T)
+        _SFD_INTEGER_CHECK("s-k", c19_s - c19_k), 1, 10, 1, 0) - 1];
       c19_j_y = c19_c_a * c19_f_b;
       c19_y += c19_j_y;
     }
 
-    c19_b_i++;
-    _SF_MEX_LISTEN_FOR_CTRL_C(chartInstance->S);
+    c19_i++;
+    sf_mex_listen_for_ctrl_c(chartInstance->S);
   }
 
   CV_EML_FOR(0, 1, 0, 0);
-  _SFD_EML_CALL(0U, chartInstance->c19_sfEvent, -20);
-  _SFD_SYMBOL_SCOPE_POP();
+  _SFD_EML_CALL(0U, *c19_sfEvent, -20);
+  sf_debug_symbol_scope_pop();
   *c19_k_y = c19_y;
-  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 14U, chartInstance->c19_sfEvent);
-  _SFD_CHECK_FOR_STATE_INCONSISTENCY(_lab2_next_levelMachineNumber_,
+  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 12U, *c19_sfEvent);
+  sf_debug_check_for_state_inconsistency(_lab2_next_levelMachineNumber_,
     chartInstance->chartNumber, chartInstance->instanceNumber);
 }
 
 static void initSimStructsc19_lab2_next_level
-  (SFc19_lab2_next_levelInstanceStruct *chartInstance)
-{
-}
-
-static void registerMessagesc19_lab2_next_level
   (SFc19_lab2_next_levelInstanceStruct *chartInstance)
 {
 }
@@ -422,20 +429,20 @@ static const mxArray *c19_b_sf_marshallOut(void *chartInstanceVoid, void
 const mxArray *sf_c19_lab2_next_level_get_eml_resolved_functions_info(void)
 {
   const mxArray *c19_nameCaptureInfo;
-  c19_ResolvedFunctionInfo c19_info[7];
-  c19_ResolvedFunctionInfo (*c19_b_info)[7];
+  c19_ResolvedFunctionInfo c19_info[6];
+  c19_ResolvedFunctionInfo (*c19_b_info)[6];
   const mxArray *c19_m0 = NULL;
   int32_T c19_i4;
   c19_ResolvedFunctionInfo *c19_r0;
   c19_nameCaptureInfo = NULL;
   c19_nameCaptureInfo = NULL;
-  c19_b_info = (c19_ResolvedFunctionInfo (*)[7])c19_info;
+  c19_b_info = (c19_ResolvedFunctionInfo (*)[6])c19_info;
   (*c19_b_info)[0].context = "";
   (*c19_b_info)[0].name = "mrdivide";
   (*c19_b_info)[0].dominantType = "double";
   (*c19_b_info)[0].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
-  (*c19_b_info)[0].fileTimeLo = 1357944348U;
+  (*c19_b_info)[0].fileTimeLo = 1342803744U;
   (*c19_b_info)[0].fileTimeHi = 0U;
   (*c19_b_info)[0].mFileTimeLo = 1319722766U;
   (*c19_b_info)[0].mFileTimeHi = 0U;
@@ -445,60 +452,50 @@ const mxArray *sf_c19_lab2_next_level_get_eml_resolved_functions_info(void)
   (*c19_b_info)[1].dominantType = "double";
   (*c19_b_info)[1].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c19_b_info)[1].fileTimeLo = 1346503188U;
+  (*c19_b_info)[1].fileTimeLo = 1286811644U;
   (*c19_b_info)[1].fileTimeHi = 0U;
   (*c19_b_info)[1].mFileTimeLo = 0U;
   (*c19_b_info)[1].mFileTimeHi = 0U;
   (*c19_b_info)[2].context =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c19_b_info)[2].name = "eml_scalexp_compatible";
+  (*c19_b_info)[2].name = "eml_div";
   (*c19_b_info)[2].dominantType = "double";
   (*c19_b_info)[2].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalexp_compatible.m";
-  (*c19_b_info)[2].fileTimeLo = 1286811596U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_div.m";
+  (*c19_b_info)[2].fileTimeLo = 1313340610U;
   (*c19_b_info)[2].fileTimeHi = 0U;
   (*c19_b_info)[2].mFileTimeLo = 0U;
   (*c19_b_info)[2].mFileTimeHi = 0U;
-  (*c19_b_info)[3].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c19_b_info)[3].name = "eml_div";
+  (*c19_b_info)[3].context = "";
+  (*c19_b_info)[3].name = "mtimes";
   (*c19_b_info)[3].dominantType = "double";
   (*c19_b_info)[3].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_div.m";
-  (*c19_b_info)[3].fileTimeLo = 1313340610U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mtimes.m";
+  (*c19_b_info)[3].fileTimeLo = 1289508892U;
   (*c19_b_info)[3].fileTimeHi = 0U;
   (*c19_b_info)[3].mFileTimeLo = 0U;
   (*c19_b_info)[3].mFileTimeHi = 0U;
   (*c19_b_info)[4].context = "";
-  (*c19_b_info)[4].name = "mtimes";
+  (*c19_b_info)[4].name = "sin";
   (*c19_b_info)[4].dominantType = "double";
   (*c19_b_info)[4].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mtimes.m";
-  (*c19_b_info)[4].fileTimeLo = 1289512492U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
+  (*c19_b_info)[4].fileTimeLo = 1286811550U;
   (*c19_b_info)[4].fileTimeHi = 0U;
   (*c19_b_info)[4].mFileTimeLo = 0U;
   (*c19_b_info)[4].mFileTimeHi = 0U;
-  (*c19_b_info)[5].context = "";
-  (*c19_b_info)[5].name = "sin";
+  (*c19_b_info)[5].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
+  (*c19_b_info)[5].name = "eml_scalar_sin";
   (*c19_b_info)[5].dominantType = "double";
   (*c19_b_info)[5].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
-  (*c19_b_info)[5].fileTimeLo = 1343823186U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_sin.m";
+  (*c19_b_info)[5].fileTimeLo = 1286811536U;
   (*c19_b_info)[5].fileTimeHi = 0U;
   (*c19_b_info)[5].mFileTimeLo = 0U;
   (*c19_b_info)[5].mFileTimeHi = 0U;
-  (*c19_b_info)[6].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
-  (*c19_b_info)[6].name = "eml_scalar_sin";
-  (*c19_b_info)[6].dominantType = "double";
-  (*c19_b_info)[6].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_sin.m";
-  (*c19_b_info)[6].fileTimeLo = 1286811536U;
-  (*c19_b_info)[6].fileTimeHi = 0U;
-  (*c19_b_info)[6].mFileTimeLo = 0U;
-  (*c19_b_info)[6].mFileTimeHi = 0U;
-  sf_mex_assign(&c19_m0, sf_mex_createstruct("nameCaptureInfo", 1, 7), FALSE);
-  for (c19_i4 = 0; c19_i4 < 7; c19_i4++) {
+  sf_mex_assign(&c19_m0, sf_mex_createstruct("nameCaptureInfo", 1, 6), FALSE);
+  for (c19_i4 = 0; c19_i4 < 6; c19_i4++) {
     c19_r0 = &c19_info[c19_i4];
     sf_mex_addfield(c19_m0, sf_mex_create("nameCaptureInfo", c19_r0->context, 15,
       0U, 0U, 0U, 2, 1, strlen(c19_r0->context)), "context", "nameCaptureInfo",
@@ -558,34 +555,34 @@ static int32_T c19_c_emlrt_marshallIn(SFc19_lab2_next_levelInstanceStruct
 static void c19_b_sf_marshallIn(void *chartInstanceVoid, const mxArray
   *c19_mxArrayInData, const char_T *c19_varName, void *c19_outData)
 {
-  const mxArray *c19_b_sfEvent;
+  const mxArray *c19_sfEvent;
   const char_T *c19_identifier;
   emlrtMsgIdentifier c19_thisId;
   int32_T c19_y;
   SFc19_lab2_next_levelInstanceStruct *chartInstance;
   chartInstance = (SFc19_lab2_next_levelInstanceStruct *)chartInstanceVoid;
-  c19_b_sfEvent = sf_mex_dup(c19_mxArrayInData);
+  c19_sfEvent = sf_mex_dup(c19_mxArrayInData);
   c19_identifier = c19_varName;
   c19_thisId.fIdentifier = c19_identifier;
   c19_thisId.fParent = NULL;
-  c19_y = c19_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c19_b_sfEvent),
+  c19_y = c19_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c19_sfEvent),
     &c19_thisId);
-  sf_mex_destroy(&c19_b_sfEvent);
+  sf_mex_destroy(&c19_sfEvent);
   *(int32_T *)c19_outData = c19_y;
   sf_mex_destroy(&c19_mxArrayInData);
 }
 
 static uint8_T c19_d_emlrt_marshallIn(SFc19_lab2_next_levelInstanceStruct
-  *chartInstance, const mxArray *c19_b_is_active_c19_lab2_next_level, const
-  char_T *c19_identifier)
+  *chartInstance, const mxArray *c19_is_active_c19_lab2_next_level, const char_T
+  *c19_identifier)
 {
   uint8_T c19_y;
   emlrtMsgIdentifier c19_thisId;
   c19_thisId.fIdentifier = c19_identifier;
   c19_thisId.fParent = NULL;
   c19_y = c19_e_emlrt_marshallIn(chartInstance, sf_mex_dup
-    (c19_b_is_active_c19_lab2_next_level), &c19_thisId);
-  sf_mex_destroy(&c19_b_is_active_c19_lab2_next_level);
+    (c19_is_active_c19_lab2_next_level), &c19_thisId);
+  sf_mex_destroy(&c19_is_active_c19_lab2_next_level);
   return c19_y;
 }
 
@@ -606,26 +603,7 @@ static void init_dsm_address_info(SFc19_lab2_next_levelInstanceStruct
 }
 
 /* SFunction Glue Code */
-#ifdef utFree
-#undef utFree
-#endif
-
-#ifdef utMalloc
-#undef utMalloc
-#endif
-
-#ifdef __cplusplus
-
-extern "C" void *utMalloc(size_t size);
-extern "C" void utFree(void*);
-
-#else
-
-extern void *utMalloc(size_t size);
-extern void utFree(void*);
-
-#endif
-
+static uint32_T* sf_get_sfun_dwork_checksum();
 void sf_c19_lab2_next_level_get_check_sum(mxArray *plhs[])
 {
   ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3557339849U);
@@ -643,7 +621,7 @@ mxArray *sf_c19_lab2_next_level_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("jXCiqRXtpmKqR30xY9snCE");
+    mxArray *mxChecksum = mxCreateString("NXdU5C70GXXJwsBfFPdHSH");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -730,12 +708,6 @@ mxArray *sf_c19_lab2_next_level_get_autoinheritance_info(void)
   return(mxAutoinheritanceInfo);
 }
 
-mxArray *sf_c19_lab2_next_level_third_party_uses_info(void)
-{
-  mxArray * mxcell3p = mxCreateCellMatrix(1,0);
-  return(mxcell3p);
-}
-
 static const mxArray *sf_get_sim_state_info_c19_lab2_next_level(void)
 {
   const char *infoFields[] = { "chartChecksum", "varInfo" };
@@ -765,8 +737,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
       {
         unsigned int chartAlreadyPresent;
         chartAlreadyPresent = sf_debug_initialize_chart
-          (sfGlobalDebugInstanceStruct,
-           _lab2_next_levelMachineNumber_,
+          (_lab2_next_levelMachineNumber_,
            19,
            1,
            1,
@@ -785,10 +756,8 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
           init_script_number_translation(_lab2_next_levelMachineNumber_,
             chartInstance->chartNumber);
           sf_debug_set_chart_disable_implicit_casting
-            (sfGlobalDebugInstanceStruct,_lab2_next_levelMachineNumber_,
-             chartInstance->chartNumber,1);
-          sf_debug_set_chart_event_thresholds(sfGlobalDebugInstanceStruct,
-            _lab2_next_levelMachineNumber_,
+            (_lab2_next_levelMachineNumber_,chartInstance->chartNumber,1);
+          sf_debug_set_chart_event_thresholds(_lab2_next_levelMachineNumber_,
             chartInstance->chartNumber,
             0,
             0,
@@ -848,20 +817,46 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
         }
       }
     } else {
-      sf_debug_reset_current_state_configuration(sfGlobalDebugInstanceStruct,
-        _lab2_next_levelMachineNumber_,chartInstance->chartNumber,
-        chartInstance->instanceNumber);
+      sf_debug_reset_current_state_configuration(_lab2_next_levelMachineNumber_,
+        chartInstance->chartNumber,chartInstance->instanceNumber);
     }
   }
 }
 
-static const char* sf_get_instance_specialization(void)
+static const char* sf_get_instance_specialization()
 {
   return "XJtCwoNhTkrbDVsoVz2uyG";
 }
 
+static void sf_check_dwork_consistency(SimStruct *S)
+{
+  if (sim_mode_is_rtw_gen(S) || sim_mode_is_external(S)) {
+    const uint32_T *sfunDWorkChecksum = sf_get_sfun_dwork_checksum();
+    mxArray *infoStruct = load_lab2_next_level_optimization_info();
+    mxArray* mxRTWDWorkChecksum = sf_get_dwork_info_from_mat_file(S,
+      sf_get_instance_specialization(), infoStruct, 19, "dworkChecksum");
+    if (mxRTWDWorkChecksum != NULL) {
+      double *pr = mxGetPr(mxRTWDWorkChecksum);
+      if ((uint32_T)pr[0] != sfunDWorkChecksum[0] ||
+          (uint32_T)pr[1] != sfunDWorkChecksum[1] ||
+          (uint32_T)pr[2] != sfunDWorkChecksum[2] ||
+          (uint32_T)pr[3] != sfunDWorkChecksum[3]) {
+        sf_mex_error_message("Code generation and simulation targets registered different sets of persistent variables for the block. "
+                             "External or Rapid Accelerator mode simulation requires code generation and simulation targets to "
+                             "register the same set of persistent variables for this block. "
+                             "This discrepancy is typically caused by MATLAB functions that have different code paths for "
+                             "simulation and code generation targets where these code paths define different sets of persistent variables. "
+                             "Please identify these code paths in the offending block and rewrite the MATLAB code so that "
+                             "the set of persistent variables is the same between simulation and code generation.");
+      }
+    }
+  }
+}
+
 static void sf_opaque_initialize_c19_lab2_next_level(void *chartInstanceVar)
 {
+  sf_check_dwork_consistency(((SFc19_lab2_next_levelInstanceStruct*)
+    chartInstanceVar)->S);
   chart_debug_initialization(((SFc19_lab2_next_levelInstanceStruct*)
     chartInstanceVar)->S,0);
   initialize_params_c19_lab2_next_level((SFc19_lab2_next_levelInstanceStruct*)
@@ -885,6 +880,12 @@ static void sf_opaque_disable_c19_lab2_next_level(void *chartInstanceVar)
 static void sf_opaque_gateway_c19_lab2_next_level(void *chartInstanceVar)
 {
   sf_c19_lab2_next_level((SFc19_lab2_next_levelInstanceStruct*) chartInstanceVar);
+}
+
+static void sf_opaque_ext_mode_exec_c19_lab2_next_level(void *chartInstanceVar)
+{
+  ext_mode_exec_c19_lab2_next_level((SFc19_lab2_next_levelInstanceStruct*)
+    chartInstanceVar);
 }
 
 extern const mxArray* sf_internal_get_sim_state_c19_lab2_next_level(SimStruct* S)
@@ -954,14 +955,15 @@ static void sf_opaque_terminate_c19_lab2_next_level(void *chartInstanceVar)
     SimStruct *S = ((SFc19_lab2_next_levelInstanceStruct*) chartInstanceVar)->S;
     if (sim_mode_is_rtw_gen(S) || sim_mode_is_external(S)) {
       sf_clear_rtw_identifier(S);
-      unload_lab2_next_level_optimization_info();
     }
 
     finalize_c19_lab2_next_level((SFc19_lab2_next_levelInstanceStruct*)
       chartInstanceVar);
-    utFree((void *)chartInstanceVar);
+    free((void *)chartInstanceVar);
     ssSetUserData(S,NULL);
   }
+
+  unload_lab2_next_level_optimization_info();
 }
 
 static void sf_opaque_init_subchart_simstructs(void *chartInstanceVar)
@@ -986,6 +988,33 @@ static void mdlProcessParameters_c19_lab2_next_level(SimStruct *S)
   }
 }
 
+mxArray *sf_c19_lab2_next_level_get_testpoint_info(void)
+{
+  const char *infoEncStr[] = {
+    "100 S'varName','path'{{T\"is_active_c19_lab2_next_level\",T\"is_active_c19_lab2_next_level\"}}"
+  };
+
+  mxArray *mxTpInfo = sf_mex_decode_encoded_mx_struct_array(infoEncStr, 1, 10);
+  return mxTpInfo;
+}
+
+static void sf_set_sfun_dwork_info(SimStruct *S)
+{
+  const char *dworkEncStr[] = {
+    "100 S1x4'type','isSigned','wordLength','bias','slope','exponent','isComplex','size'{{T\"int32\",,,,,,M[0],M[]},{T\"boolean\",,,,,,M[0],M[]},{T\"boolean\",,,,,,M[0],M[]},{T\"uint8\",,,,,,M[0],M[]}}"
+  };
+
+  sf_set_encoded_dwork_info(S, dworkEncStr, 4, 10);
+}
+
+static uint32_T* sf_get_sfun_dwork_checksum()
+{
+  static uint32_T checksum[4] = { 3851270630U, 3363230343U, 1651207761U,
+    946165807U };
+
+  return checksum;
+}
+
 static void mdlSetWorkWidths_c19_lab2_next_level(SimStruct *S)
 {
   if (sim_mode_is_rtw_gen(S) || sim_mode_is_external(S)) {
@@ -1001,7 +1030,6 @@ static void mdlSetWorkWidths_c19_lab2_next_level(SimStruct *S)
     ssSetNotMultipleInlinable(S,sf_rtw_info_uint_prop(S,
       sf_get_instance_specialization(),infoStruct,19,
       "gatewayCannotBeInlinedMultipleTimes"));
-    sf_update_buildInfo(S,sf_get_instance_specialization(),infoStruct,19);
     if (chartIsInlinable) {
       ssSetInputPortOptimOpts(S, 0, SS_REUSABLE_AND_LOCAL);
       ssSetInputPortOptimOpts(S, 1, SS_REUSABLE_AND_LOCAL);
@@ -1011,30 +1039,17 @@ static void mdlSetWorkWidths_c19_lab2_next_level(SimStruct *S)
         infoStruct,19,1);
     }
 
-    {
-      unsigned int outPortIdx;
-      for (outPortIdx=1; outPortIdx<=1; ++outPortIdx) {
-        ssSetOutputPortOptimizeInIR(S, outPortIdx, 1U);
-      }
-    }
-
-    {
-      unsigned int inPortIdx;
-      for (inPortIdx=0; inPortIdx < 2; ++inPortIdx) {
-        ssSetInputPortOptimizeInIR(S, inPortIdx, 1U);
-      }
-    }
-
     sf_set_rtw_dwork_info(S,sf_get_instance_specialization(),infoStruct,19);
     ssSetHasSubFunctions(S,!(chartIsInlinable));
   } else {
+    sf_set_sfun_dwork_info(S);
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(167058084U));
-  ssSetChecksum1(S,(4094593174U));
-  ssSetChecksum2(S,(2158986303U));
-  ssSetChecksum3(S,(2984293827U));
+  ssSetChecksum0(S,(174841256U));
+  ssSetChecksum1(S,(1876551912U));
+  ssSetChecksum2(S,(4071441185U));
+  ssSetChecksum3(S,(4003808269U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
   ssSupportsMultipleExecInstances(S,1);
@@ -1050,7 +1065,7 @@ static void mdlRTW_c19_lab2_next_level(SimStruct *S)
 static void mdlStart_c19_lab2_next_level(SimStruct *S)
 {
   SFc19_lab2_next_levelInstanceStruct *chartInstance;
-  chartInstance = (SFc19_lab2_next_levelInstanceStruct *)utMalloc(sizeof
+  chartInstance = (SFc19_lab2_next_levelInstanceStruct *)malloc(sizeof
     (SFc19_lab2_next_levelInstanceStruct));
   memset(chartInstance, 0, sizeof(SFc19_lab2_next_levelInstanceStruct));
   if (chartInstance==NULL) {
@@ -1081,7 +1096,8 @@ static void mdlStart_c19_lab2_next_level(SimStruct *S)
   chartInstance->chartInfo.mdlStart = mdlStart_c19_lab2_next_level;
   chartInstance->chartInfo.mdlSetWorkWidths =
     mdlSetWorkWidths_c19_lab2_next_level;
-  chartInstance->chartInfo.extModeExec = NULL;
+  chartInstance->chartInfo.extModeExec =
+    sf_opaque_ext_mode_exec_c19_lab2_next_level;
   chartInstance->chartInfo.restoreLastMajorStepConfiguration = NULL;
   chartInstance->chartInfo.restoreBeforeLastMajorStepConfiguration = NULL;
   chartInstance->chartInfo.storeCurrentConfiguration = NULL;

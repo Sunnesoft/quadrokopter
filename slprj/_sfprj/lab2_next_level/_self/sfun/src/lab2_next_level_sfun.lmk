@@ -10,13 +10,22 @@ OBJECTS = \
 	"lab2_next_level_sfun_registry.obj"\
 	"c1_lab2_next_level.obj"\
 	"c2_lab2_next_level.obj"\
+	"c3_lab2_next_level.obj"\
 	"c5_lab2_next_level.obj"\
 	"c6_lab2_next_level.obj"\
 	"c7_lab2_next_level.obj"\
 	"c9_lab2_next_level.obj"\
+	"c10_lab2_next_level.obj"\
 	"c11_lab2_next_level.obj"\
-	"c14_lab2_next_level.obj"\
-	"c15_lab2_next_level.obj"\
+	"c16_lab2_next_level.obj"\
+	"c17_lab2_next_level.obj"\
+	"c18_lab2_next_level.obj"\
+	"c19_lab2_next_level.obj"\
+	"c20_lab2_next_level.obj"\
+	"c21_lab2_next_level.obj"\
+	"c22_lab2_next_level.obj"\
+	"c23_lab2_next_level.obj"\
+	"c24_lab2_next_level.obj"\
 	"lccstub.obj"\
 	"C:\Programming\MATLAB\MATLAB Production Server\R2012b\sys\lcc\mex\lccdef.def"\
 	"C:\Programming\MATLAB\MATLAB Production Server\R2012b\stateflow\c\debugger\lib\win32\sfc_debuglcc.lib"\
@@ -42,6 +51,8 @@ c1_lab2_next_level.obj :	"c1_lab2_next_level.c"
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c1_lab2_next_level.c"
 c2_lab2_next_level.obj :	"c2_lab2_next_level.c"
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c2_lab2_next_level.c"
+c3_lab2_next_level.obj :	"c3_lab2_next_level.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c3_lab2_next_level.c"
 c5_lab2_next_level.obj :	"c5_lab2_next_level.c"
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c5_lab2_next_level.c"
 c6_lab2_next_level.obj :	"c6_lab2_next_level.c"
@@ -50,11 +61,27 @@ c7_lab2_next_level.obj :	"c7_lab2_next_level.c"
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c7_lab2_next_level.c"
 c9_lab2_next_level.obj :	"c9_lab2_next_level.c"
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c9_lab2_next_level.c"
+c10_lab2_next_level.obj :	"c10_lab2_next_level.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c10_lab2_next_level.c"
 c11_lab2_next_level.obj :	"c11_lab2_next_level.c"
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c11_lab2_next_level.c"
-c14_lab2_next_level.obj :	"c14_lab2_next_level.c"
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c14_lab2_next_level.c"
-c15_lab2_next_level.obj :	"c15_lab2_next_level.c"
-	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c15_lab2_next_level.c"
+c16_lab2_next_level.obj :	"c16_lab2_next_level.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c16_lab2_next_level.c"
+c17_lab2_next_level.obj :	"c17_lab2_next_level.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c17_lab2_next_level.c"
+c18_lab2_next_level.obj :	"c18_lab2_next_level.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c18_lab2_next_level.c"
+c19_lab2_next_level.obj :	"c19_lab2_next_level.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c19_lab2_next_level.c"
+c20_lab2_next_level.obj :	"c20_lab2_next_level.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c20_lab2_next_level.c"
+c21_lab2_next_level.obj :	"c21_lab2_next_level.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c21_lab2_next_level.c"
+c22_lab2_next_level.obj :	"c22_lab2_next_level.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c22_lab2_next_level.c"
+c23_lab2_next_level.obj :	"c23_lab2_next_level.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c23_lab2_next_level.c"
+c24_lab2_next_level.obj :	"c24_lab2_next_level.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c24_lab2_next_level.c"
 lccstub.obj :	"C:\Programming\MATLAB\MATLAB Production Server\R2012b\sys\lcc\mex\lccstub.c"
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) "C:\Programming\MATLAB\MATLAB Production Server\R2012b\sys\lcc\mex\lccstub.c"

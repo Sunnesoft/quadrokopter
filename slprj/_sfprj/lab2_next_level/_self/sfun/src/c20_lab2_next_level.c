@@ -1,14 +1,12 @@
 /* Include files */
 
-#include <stddef.h>
-#include "blas.h"
+#include "blascompat32.h"
 #include "lab2_next_level_sfun.h"
 #include "c20_lab2_next_level.h"
 #include "mwmathutil.h"
 #define CHARTINSTANCE_CHARTNUMBER      (chartInstance->chartNumber)
 #define CHARTINSTANCE_INSTANCENUMBER   (chartInstance->instanceNumber)
 #include "lab2_next_level_sfun_debug_macros.h"
-#define _SF_MEX_LISTEN_FOR_CTRL_C(S)   sf_mex_listen_for_ctrl_c(sfGlobalDebugInstanceStruct,S);
 
 /* Type Definitions */
 
@@ -18,8 +16,8 @@
 /* Variable Declarations */
 
 /* Variable Definitions */
-static const char * c20_debug_family_names[12] = { "s", "e", "M", "i", "k", "w",
-  "h", "nargin", "nargout", "signal", "wc", "y" };
+static const char * c20_debug_family_names[11] = { "s", "e", "M", "k", "w", "h",
+  "nargin", "nargout", "signal", "wc", "y" };
 
 /* Function Declarations */
 static void initialize_c20_lab2_next_level(SFc20_lab2_next_levelInstanceStruct
@@ -32,6 +30,8 @@ static void disable_c20_lab2_next_level(SFc20_lab2_next_levelInstanceStruct
   *chartInstance);
 static void c20_update_debugger_state_c20_lab2_next_level
   (SFc20_lab2_next_levelInstanceStruct *chartInstance);
+static void ext_mode_exec_c20_lab2_next_level
+  (SFc20_lab2_next_levelInstanceStruct *chartInstance);
 static const mxArray *get_sim_state_c20_lab2_next_level
   (SFc20_lab2_next_levelInstanceStruct *chartInstance);
 static void set_sim_state_c20_lab2_next_level
@@ -41,8 +41,6 @@ static void finalize_c20_lab2_next_level(SFc20_lab2_next_levelInstanceStruct
 static void sf_c20_lab2_next_level(SFc20_lab2_next_levelInstanceStruct
   *chartInstance);
 static void initSimStructsc20_lab2_next_level
-  (SFc20_lab2_next_levelInstanceStruct *chartInstance);
-static void registerMessagesc20_lab2_next_level
   (SFc20_lab2_next_levelInstanceStruct *chartInstance);
 static void init_script_number_translation(uint32_T c20_machineNumber, uint32_T
   c20_chartNumber);
@@ -63,8 +61,8 @@ static int32_T c20_c_emlrt_marshallIn(SFc20_lab2_next_levelInstanceStruct
 static void c20_b_sf_marshallIn(void *chartInstanceVoid, const mxArray
   *c20_mxArrayInData, const char_T *c20_varName, void *c20_outData);
 static uint8_T c20_d_emlrt_marshallIn(SFc20_lab2_next_levelInstanceStruct
-  *chartInstance, const mxArray *c20_b_is_active_c20_lab2_next_level, const
-  char_T *c20_identifier);
+  *chartInstance, const mxArray *c20_is_active_c20_lab2_next_level, const char_T
+  *c20_identifier);
 static uint8_T c20_e_emlrt_marshallIn(SFc20_lab2_next_levelInstanceStruct
   *chartInstance, const mxArray *c20_u, const emlrtMsgIdentifier *c20_parentId);
 static void init_dsm_address_info(SFc20_lab2_next_levelInstanceStruct
@@ -74,9 +72,13 @@ static void init_dsm_address_info(SFc20_lab2_next_levelInstanceStruct
 static void initialize_c20_lab2_next_level(SFc20_lab2_next_levelInstanceStruct
   *chartInstance)
 {
-  chartInstance->c20_sfEvent = CALL_EVENT;
+  int32_T *c20_sfEvent;
+  uint8_T *c20_is_active_c20_lab2_next_level;
+  c20_is_active_c20_lab2_next_level = (uint8_T *)ssGetDWork(chartInstance->S, 3);
+  c20_sfEvent = (int32_T *)ssGetDWork(chartInstance->S, 0);
+  *c20_sfEvent = CALL_EVENT;
   _sfTime_ = (real_T)ssGetT(chartInstance->S);
-  chartInstance->c20_is_active_c20_lab2_next_level = 0U;
+  *c20_is_active_c20_lab2_next_level = 0U;
 }
 
 static void initialize_params_c20_lab2_next_level
@@ -101,6 +103,12 @@ static void c20_update_debugger_state_c20_lab2_next_level
 {
 }
 
+static void ext_mode_exec_c20_lab2_next_level
+  (SFc20_lab2_next_levelInstanceStruct *chartInstance)
+{
+  c20_update_debugger_state_c20_lab2_next_level(chartInstance);
+}
+
 static const mxArray *get_sim_state_c20_lab2_next_level
   (SFc20_lab2_next_levelInstanceStruct *chartInstance)
 {
@@ -113,7 +121,9 @@ static const mxArray *get_sim_state_c20_lab2_next_level
   uint8_T c20_b_u;
   const mxArray *c20_c_y = NULL;
   real_T *c20_d_y;
+  uint8_T *c20_is_active_c20_lab2_next_level;
   c20_d_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
+  c20_is_active_c20_lab2_next_level = (uint8_T *)ssGetDWork(chartInstance->S, 3);
   c20_st = NULL;
   c20_st = NULL;
   c20_y = NULL;
@@ -123,7 +133,7 @@ static const mxArray *get_sim_state_c20_lab2_next_level
   c20_b_y = NULL;
   sf_mex_assign(&c20_b_y, sf_mex_create("y", &c20_u, 0, 0U, 0U, 0U, 0), FALSE);
   sf_mex_setcell(c20_y, 0, c20_b_y);
-  c20_b_hoistedGlobal = chartInstance->c20_is_active_c20_lab2_next_level;
+  c20_b_hoistedGlobal = *c20_is_active_c20_lab2_next_level;
   c20_b_u = c20_b_hoistedGlobal;
   c20_c_y = NULL;
   sf_mex_assign(&c20_c_y, sf_mex_create("y", &c20_b_u, 3, 0U, 0U, 0U, 0), FALSE);
@@ -136,15 +146,18 @@ static void set_sim_state_c20_lab2_next_level
   (SFc20_lab2_next_levelInstanceStruct *chartInstance, const mxArray *c20_st)
 {
   const mxArray *c20_u;
+  boolean_T *c20_doneDoubleBufferReInit;
   real_T *c20_y;
+  uint8_T *c20_is_active_c20_lab2_next_level;
   c20_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
-  chartInstance->c20_doneDoubleBufferReInit = TRUE;
+  c20_is_active_c20_lab2_next_level = (uint8_T *)ssGetDWork(chartInstance->S, 3);
+  c20_doneDoubleBufferReInit = (boolean_T *)ssGetDWork(chartInstance->S, 2);
+  *c20_doneDoubleBufferReInit = TRUE;
   c20_u = sf_mex_dup(c20_st);
   *c20_y = c20_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c20_u,
     0)), "y");
-  chartInstance->c20_is_active_c20_lab2_next_level = c20_d_emlrt_marshallIn
-    (chartInstance, sf_mex_dup(sf_mex_getcell(c20_u, 1)),
-     "is_active_c20_lab2_next_level");
+  *c20_is_active_c20_lab2_next_level = c20_d_emlrt_marshallIn(chartInstance,
+    sf_mex_dup(sf_mex_getcell(c20_u, 1)), "is_active_c20_lab2_next_level");
   sf_mex_destroy(&c20_u);
   c20_update_debugger_state_c20_lab2_next_level(chartInstance);
   sf_mex_destroy(&c20_st);
@@ -163,18 +176,18 @@ static void sf_c20_lab2_next_level(SFc20_lab2_next_levelInstanceStruct
   int32_T c20_i1;
   real_T c20_signal[10];
   real_T c20_wc;
-  uint32_T c20_debug_family_var_map[12];
+  uint32_T c20_debug_family_var_map[11];
   real_T c20_s;
   real_T c20_e;
   real_T c20_M;
-  real_T c20_i;
   real_T c20_k;
   real_T c20_w;
   real_T c20_h;
   real_T c20_nargin = 2.0;
   real_T c20_nargout = 1.0;
   real_T c20_y;
-  int32_T c20_b_i;
+  int32_T c20_i;
+  real_T c20_b_i;
   real_T c20_b;
   real_T c20_b_y;
   real_T c20_A;
@@ -215,65 +228,64 @@ static void sf_c20_lab2_next_level(SFc20_lab2_next_levelInstanceStruct
   real_T c20_l_y;
   real_T *c20_b_wc;
   real_T *c20_m_y;
+  int32_T *c20_sfEvent;
   real_T (*c20_b_signal)[10];
   c20_b_wc = (real_T *)ssGetInputPortSignal(chartInstance->S, 1);
   c20_m_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   c20_b_signal = (real_T (*)[10])ssGetInputPortSignal(chartInstance->S, 0);
+  c20_sfEvent = (int32_T *)ssGetDWork(chartInstance->S, 0);
   _sfTime_ = (real_T)ssGetT(chartInstance->S);
-  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 15U, chartInstance->c20_sfEvent);
+  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 13U, *c20_sfEvent);
   for (c20_i0 = 0; c20_i0 < 10; c20_i0++) {
     _SFD_DATA_RANGE_CHECK((*c20_b_signal)[c20_i0], 0U);
   }
 
   _SFD_DATA_RANGE_CHECK(*c20_m_y, 1U);
   _SFD_DATA_RANGE_CHECK(*c20_b_wc, 2U);
-  chartInstance->c20_sfEvent = CALL_EVENT;
-  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 15U, chartInstance->c20_sfEvent);
+  *c20_sfEvent = CALL_EVENT;
+  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 13U, *c20_sfEvent);
   c20_hoistedGlobal = *c20_b_wc;
   for (c20_i1 = 0; c20_i1 < 10; c20_i1++) {
     c20_signal[c20_i1] = (*c20_b_signal)[c20_i1];
   }
 
   c20_wc = c20_hoistedGlobal;
-  _SFD_SYMBOL_SCOPE_PUSH_EML(0U, 12U, 12U, c20_debug_family_names,
+  sf_debug_symbol_scope_push_eml(0U, 11U, 11U, c20_debug_family_names,
     c20_debug_family_var_map);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c20_s, 0U, c20_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c20_e, 1U, c20_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml(&c20_s, 0U, c20_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml_importable(&c20_e, 1U, c20_sf_marshallOut,
     c20_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c20_M, 2U, c20_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c20_i, 3U, c20_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml(&c20_M, 2U, c20_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml_importable(&c20_k, 3U, c20_sf_marshallOut,
     c20_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c20_k, 4U, c20_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml_importable(&c20_w, 4U, c20_sf_marshallOut,
     c20_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c20_w, 5U, c20_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml_importable(&c20_h, 5U, c20_sf_marshallOut,
     c20_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c20_h, 6U, c20_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml_importable(&c20_nargin, 6U, c20_sf_marshallOut,
     c20_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c20_nargin, 7U, c20_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml_importable(&c20_nargout, 7U, c20_sf_marshallOut,
     c20_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c20_nargout, 8U, c20_sf_marshallOut,
-    c20_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML(c20_signal, 9U, c20_b_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c20_wc, 10U, c20_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c20_y, 11U, c20_sf_marshallOut,
+  sf_debug_symbol_scope_add_eml(c20_signal, 8U, c20_b_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml(&c20_wc, 9U, c20_sf_marshallOut);
+  sf_debug_symbol_scope_add_eml_importable(&c20_y, 10U, c20_sf_marshallOut,
     c20_sf_marshallIn);
   CV_EML_FCN(0, 0);
-  _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, 4);
+  _SFD_EML_CALL(0U, *c20_sfEvent, 4);
   c20_s = 10.0;
   c20_e = 1.0;
-  _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, 5);
+  _SFD_EML_CALL(0U, *c20_sfEvent, 5);
   c20_y = 0.0;
-  _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, 7);
+  _SFD_EML_CALL(0U, *c20_sfEvent, 7);
   c20_M = 10.0;
-  _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, 9);
-  c20_i = 1.0;
-  c20_b_i = 0;
-  while (c20_b_i < 10) {
-    c20_i = 1.0 + (real_T)c20_b_i;
+  _SFD_EML_CALL(0U, *c20_sfEvent, 9);
+  c20_i = 0;
+  while (c20_i < 10) {
+    c20_b_i = 1.0 + (real_T)c20_i;
     CV_EML_FOR(0, 1, 0, 1);
-    _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, 10);
-    c20_k = c20_i - 1.0;
-    _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, 12);
+    _SFD_EML_CALL(0U, *c20_sfEvent, 10);
+    c20_k = c20_b_i - 1.0;
+    _SFD_EML_CALL(0U, *c20_sfEvent, 12);
     c20_b = c20_k;
     c20_b_y = 6.2831853071795862 * c20_b;
     c20_A = c20_b_y;
@@ -285,26 +297,26 @@ static void sf_c20_lab2_next_level(SFc20_lab2_next_levelInstanceStruct
     c20_d_x = muDoubleScalarCos(c20_d_x);
     c20_b_b = 1.0 - c20_d_x;
     c20_w = 0.5 * c20_b_b;
-    _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, 14);
-    if (CV_EML_IF(0, 1, 0, c20_i != c20_s)) {
-      _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, 15);
+    _SFD_EML_CALL(0U, *c20_sfEvent, 14);
+    if (CV_EML_IF(0, 1, 0, c20_b_i != c20_s)) {
+      _SFD_EML_CALL(0U, *c20_sfEvent, 15);
       c20_b_A = c20_wc;
       c20_e_x = c20_b_A;
       c20_f_x = c20_e_x;
       c20_d_y = c20_f_x / 3.1415926535897931;
       c20_h = 1.0 - c20_d_y;
-      _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, 16);
+      _SFD_EML_CALL(0U, *c20_sfEvent, 16);
       c20_a = c20_w;
       c20_c_b = c20_h;
       c20_e_y = c20_a * c20_c_b;
       c20_b_a = c20_e_y;
-      c20_d_b = c20_signal[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("signal",
-        (int32_T)_SFD_INTEGER_CHECK("s-k", c20_s - c20_k), 1, 10, 1, 0) - 1];
+      c20_d_b = c20_signal[_SFD_EML_ARRAY_BOUNDS_CHECK("signal", (int32_T)
+        _SFD_INTEGER_CHECK("s-k", c20_s - c20_k), 1, 10, 1, 0) - 1];
       c20_f_y = c20_b_a * c20_d_b;
       c20_y += c20_f_y;
-      _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, 17);
+      _SFD_EML_CALL(0U, *c20_sfEvent, 17);
     } else {
-      _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, 20);
+      _SFD_EML_CALL(0U, *c20_sfEvent, 20);
       c20_c_a = c20_wc;
       c20_e_b = c20_k - c20_M;
       c20_g_y = c20_c_a * c20_e_b;
@@ -320,36 +332,31 @@ static void sf_c20_lab2_next_level(SFc20_lab2_next_levelInstanceStruct
       c20_j_x = c20_i_x;
       c20_j_y = c20_i_y;
       c20_h = c20_j_x / c20_j_y;
-      _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, 21);
+      _SFD_EML_CALL(0U, *c20_sfEvent, 21);
       c20_d_a = c20_w;
       c20_g_b = c20_h;
       c20_k_y = c20_d_a * c20_g_b;
       c20_e_a = c20_k_y;
-      c20_h_b = c20_signal[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("signal",
-        (int32_T)_SFD_INTEGER_CHECK("s-k", c20_s - c20_k), 1, 10, 1, 0) - 1];
+      c20_h_b = c20_signal[_SFD_EML_ARRAY_BOUNDS_CHECK("signal", (int32_T)
+        _SFD_INTEGER_CHECK("s-k", c20_s - c20_k), 1, 10, 1, 0) - 1];
       c20_l_y = c20_e_a * c20_h_b;
       c20_y += c20_l_y;
     }
 
-    c20_b_i++;
-    _SF_MEX_LISTEN_FOR_CTRL_C(chartInstance->S);
+    c20_i++;
+    sf_mex_listen_for_ctrl_c(chartInstance->S);
   }
 
   CV_EML_FOR(0, 1, 0, 0);
-  _SFD_EML_CALL(0U, chartInstance->c20_sfEvent, -21);
-  _SFD_SYMBOL_SCOPE_POP();
+  _SFD_EML_CALL(0U, *c20_sfEvent, -21);
+  sf_debug_symbol_scope_pop();
   *c20_m_y = c20_y;
-  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 15U, chartInstance->c20_sfEvent);
-  _SFD_CHECK_FOR_STATE_INCONSISTENCY(_lab2_next_levelMachineNumber_,
+  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 13U, *c20_sfEvent);
+  sf_debug_check_for_state_inconsistency(_lab2_next_levelMachineNumber_,
     chartInstance->chartNumber, chartInstance->instanceNumber);
 }
 
 static void initSimStructsc20_lab2_next_level
-  (SFc20_lab2_next_levelInstanceStruct *chartInstance)
-{
-}
-
-static void registerMessagesc20_lab2_next_level
   (SFc20_lab2_next_levelInstanceStruct *chartInstance)
 {
 }
@@ -446,20 +453,20 @@ static const mxArray *c20_b_sf_marshallOut(void *chartInstanceVoid, void
 const mxArray *sf_c20_lab2_next_level_get_eml_resolved_functions_info(void)
 {
   const mxArray *c20_nameCaptureInfo;
-  c20_ResolvedFunctionInfo c20_info[9];
-  c20_ResolvedFunctionInfo (*c20_b_info)[9];
+  c20_ResolvedFunctionInfo c20_info[8];
+  c20_ResolvedFunctionInfo (*c20_b_info)[8];
   const mxArray *c20_m0 = NULL;
   int32_T c20_i4;
   c20_ResolvedFunctionInfo *c20_r0;
   c20_nameCaptureInfo = NULL;
   c20_nameCaptureInfo = NULL;
-  c20_b_info = (c20_ResolvedFunctionInfo (*)[9])c20_info;
+  c20_b_info = (c20_ResolvedFunctionInfo (*)[8])c20_info;
   (*c20_b_info)[0].context = "";
   (*c20_b_info)[0].name = "mtimes";
   (*c20_b_info)[0].dominantType = "double";
   (*c20_b_info)[0].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mtimes.m";
-  (*c20_b_info)[0].fileTimeLo = 1289512492U;
+  (*c20_b_info)[0].fileTimeLo = 1289508892U;
   (*c20_b_info)[0].fileTimeHi = 0U;
   (*c20_b_info)[0].mFileTimeLo = 0U;
   (*c20_b_info)[0].mFileTimeHi = 0U;
@@ -468,7 +475,7 @@ const mxArray *sf_c20_lab2_next_level_get_eml_resolved_functions_info(void)
   (*c20_b_info)[1].dominantType = "double";
   (*c20_b_info)[1].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
-  (*c20_b_info)[1].fileTimeLo = 1357944348U;
+  (*c20_b_info)[1].fileTimeLo = 1342803744U;
   (*c20_b_info)[1].fileTimeHi = 0U;
   (*c20_b_info)[1].mFileTimeLo = 1319722766U;
   (*c20_b_info)[1].mFileTimeHi = 0U;
@@ -478,70 +485,60 @@ const mxArray *sf_c20_lab2_next_level_get_eml_resolved_functions_info(void)
   (*c20_b_info)[2].dominantType = "double";
   (*c20_b_info)[2].resolved =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c20_b_info)[2].fileTimeLo = 1346503188U;
+  (*c20_b_info)[2].fileTimeLo = 1286811644U;
   (*c20_b_info)[2].fileTimeHi = 0U;
   (*c20_b_info)[2].mFileTimeLo = 0U;
   (*c20_b_info)[2].mFileTimeHi = 0U;
   (*c20_b_info)[3].context =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c20_b_info)[3].name = "eml_scalexp_compatible";
+  (*c20_b_info)[3].name = "eml_div";
   (*c20_b_info)[3].dominantType = "double";
   (*c20_b_info)[3].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalexp_compatible.m";
-  (*c20_b_info)[3].fileTimeLo = 1286811596U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_div.m";
+  (*c20_b_info)[3].fileTimeLo = 1313340610U;
   (*c20_b_info)[3].fileTimeHi = 0U;
   (*c20_b_info)[3].mFileTimeLo = 0U;
   (*c20_b_info)[3].mFileTimeHi = 0U;
-  (*c20_b_info)[4].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c20_b_info)[4].name = "eml_div";
+  (*c20_b_info)[4].context = "";
+  (*c20_b_info)[4].name = "cos";
   (*c20_b_info)[4].dominantType = "double";
   (*c20_b_info)[4].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_div.m";
-  (*c20_b_info)[4].fileTimeLo = 1313340610U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/cos.m";
+  (*c20_b_info)[4].fileTimeLo = 1286811506U;
   (*c20_b_info)[4].fileTimeHi = 0U;
   (*c20_b_info)[4].mFileTimeLo = 0U;
   (*c20_b_info)[4].mFileTimeHi = 0U;
-  (*c20_b_info)[5].context = "";
-  (*c20_b_info)[5].name = "cos";
+  (*c20_b_info)[5].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/cos.m";
+  (*c20_b_info)[5].name = "eml_scalar_cos";
   (*c20_b_info)[5].dominantType = "double";
   (*c20_b_info)[5].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/cos.m";
-  (*c20_b_info)[5].fileTimeLo = 1343823172U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_cos.m";
+  (*c20_b_info)[5].fileTimeLo = 1286811522U;
   (*c20_b_info)[5].fileTimeHi = 0U;
   (*c20_b_info)[5].mFileTimeLo = 0U;
   (*c20_b_info)[5].mFileTimeHi = 0U;
-  (*c20_b_info)[6].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/cos.m";
-  (*c20_b_info)[6].name = "eml_scalar_cos";
+  (*c20_b_info)[6].context = "";
+  (*c20_b_info)[6].name = "sin";
   (*c20_b_info)[6].dominantType = "double";
   (*c20_b_info)[6].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_cos.m";
-  (*c20_b_info)[6].fileTimeLo = 1286811522U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
+  (*c20_b_info)[6].fileTimeLo = 1286811550U;
   (*c20_b_info)[6].fileTimeHi = 0U;
   (*c20_b_info)[6].mFileTimeLo = 0U;
   (*c20_b_info)[6].mFileTimeHi = 0U;
-  (*c20_b_info)[7].context = "";
-  (*c20_b_info)[7].name = "sin";
+  (*c20_b_info)[7].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
+  (*c20_b_info)[7].name = "eml_scalar_sin";
   (*c20_b_info)[7].dominantType = "double";
   (*c20_b_info)[7].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
-  (*c20_b_info)[7].fileTimeLo = 1343823186U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_sin.m";
+  (*c20_b_info)[7].fileTimeLo = 1286811536U;
   (*c20_b_info)[7].fileTimeHi = 0U;
   (*c20_b_info)[7].mFileTimeLo = 0U;
   (*c20_b_info)[7].mFileTimeHi = 0U;
-  (*c20_b_info)[8].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
-  (*c20_b_info)[8].name = "eml_scalar_sin";
-  (*c20_b_info)[8].dominantType = "double";
-  (*c20_b_info)[8].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_sin.m";
-  (*c20_b_info)[8].fileTimeLo = 1286811536U;
-  (*c20_b_info)[8].fileTimeHi = 0U;
-  (*c20_b_info)[8].mFileTimeLo = 0U;
-  (*c20_b_info)[8].mFileTimeHi = 0U;
-  sf_mex_assign(&c20_m0, sf_mex_createstruct("nameCaptureInfo", 1, 9), FALSE);
-  for (c20_i4 = 0; c20_i4 < 9; c20_i4++) {
+  sf_mex_assign(&c20_m0, sf_mex_createstruct("nameCaptureInfo", 1, 8), FALSE);
+  for (c20_i4 = 0; c20_i4 < 8; c20_i4++) {
     c20_r0 = &c20_info[c20_i4];
     sf_mex_addfield(c20_m0, sf_mex_create("nameCaptureInfo", c20_r0->context, 15,
       0U, 0U, 0U, 2, 1, strlen(c20_r0->context)), "context", "nameCaptureInfo",
@@ -601,34 +598,34 @@ static int32_T c20_c_emlrt_marshallIn(SFc20_lab2_next_levelInstanceStruct
 static void c20_b_sf_marshallIn(void *chartInstanceVoid, const mxArray
   *c20_mxArrayInData, const char_T *c20_varName, void *c20_outData)
 {
-  const mxArray *c20_b_sfEvent;
+  const mxArray *c20_sfEvent;
   const char_T *c20_identifier;
   emlrtMsgIdentifier c20_thisId;
   int32_T c20_y;
   SFc20_lab2_next_levelInstanceStruct *chartInstance;
   chartInstance = (SFc20_lab2_next_levelInstanceStruct *)chartInstanceVoid;
-  c20_b_sfEvent = sf_mex_dup(c20_mxArrayInData);
+  c20_sfEvent = sf_mex_dup(c20_mxArrayInData);
   c20_identifier = c20_varName;
   c20_thisId.fIdentifier = c20_identifier;
   c20_thisId.fParent = NULL;
-  c20_y = c20_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c20_b_sfEvent),
+  c20_y = c20_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c20_sfEvent),
     &c20_thisId);
-  sf_mex_destroy(&c20_b_sfEvent);
+  sf_mex_destroy(&c20_sfEvent);
   *(int32_T *)c20_outData = c20_y;
   sf_mex_destroy(&c20_mxArrayInData);
 }
 
 static uint8_T c20_d_emlrt_marshallIn(SFc20_lab2_next_levelInstanceStruct
-  *chartInstance, const mxArray *c20_b_is_active_c20_lab2_next_level, const
-  char_T *c20_identifier)
+  *chartInstance, const mxArray *c20_is_active_c20_lab2_next_level, const char_T
+  *c20_identifier)
 {
   uint8_T c20_y;
   emlrtMsgIdentifier c20_thisId;
   c20_thisId.fIdentifier = c20_identifier;
   c20_thisId.fParent = NULL;
   c20_y = c20_e_emlrt_marshallIn(chartInstance, sf_mex_dup
-    (c20_b_is_active_c20_lab2_next_level), &c20_thisId);
-  sf_mex_destroy(&c20_b_is_active_c20_lab2_next_level);
+    (c20_is_active_c20_lab2_next_level), &c20_thisId);
+  sf_mex_destroy(&c20_is_active_c20_lab2_next_level);
   return c20_y;
 }
 
@@ -649,26 +646,7 @@ static void init_dsm_address_info(SFc20_lab2_next_levelInstanceStruct
 }
 
 /* SFunction Glue Code */
-#ifdef utFree
-#undef utFree
-#endif
-
-#ifdef utMalloc
-#undef utMalloc
-#endif
-
-#ifdef __cplusplus
-
-extern "C" void *utMalloc(size_t size);
-extern "C" void utFree(void*);
-
-#else
-
-extern void *utMalloc(size_t size);
-extern void utFree(void*);
-
-#endif
-
+static uint32_T* sf_get_sfun_dwork_checksum();
 void sf_c20_lab2_next_level_get_check_sum(mxArray *plhs[])
 {
   ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3711787033U);
@@ -686,7 +664,7 @@ mxArray *sf_c20_lab2_next_level_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("LwWzKcNeoaKftINKW0CKOE");
+    mxArray *mxChecksum = mxCreateString("0mvZya5kZsgbBXcVaHzvJ");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -773,12 +751,6 @@ mxArray *sf_c20_lab2_next_level_get_autoinheritance_info(void)
   return(mxAutoinheritanceInfo);
 }
 
-mxArray *sf_c20_lab2_next_level_third_party_uses_info(void)
-{
-  mxArray * mxcell3p = mxCreateCellMatrix(1,0);
-  return(mxcell3p);
-}
-
 static const mxArray *sf_get_sim_state_info_c20_lab2_next_level(void)
 {
   const char *infoFields[] = { "chartChecksum", "varInfo" };
@@ -808,8 +780,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
       {
         unsigned int chartAlreadyPresent;
         chartAlreadyPresent = sf_debug_initialize_chart
-          (sfGlobalDebugInstanceStruct,
-           _lab2_next_levelMachineNumber_,
+          (_lab2_next_levelMachineNumber_,
            20,
            1,
            1,
@@ -828,10 +799,8 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
           init_script_number_translation(_lab2_next_levelMachineNumber_,
             chartInstance->chartNumber);
           sf_debug_set_chart_disable_implicit_casting
-            (sfGlobalDebugInstanceStruct,_lab2_next_levelMachineNumber_,
-             chartInstance->chartNumber,1);
-          sf_debug_set_chart_event_thresholds(sfGlobalDebugInstanceStruct,
-            _lab2_next_levelMachineNumber_,
+            (_lab2_next_levelMachineNumber_,chartInstance->chartNumber,1);
+          sf_debug_set_chart_event_thresholds(_lab2_next_levelMachineNumber_,
             chartInstance->chartNumber,
             0,
             0,
@@ -891,20 +860,46 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
         }
       }
     } else {
-      sf_debug_reset_current_state_configuration(sfGlobalDebugInstanceStruct,
-        _lab2_next_levelMachineNumber_,chartInstance->chartNumber,
-        chartInstance->instanceNumber);
+      sf_debug_reset_current_state_configuration(_lab2_next_levelMachineNumber_,
+        chartInstance->chartNumber,chartInstance->instanceNumber);
     }
   }
 }
 
-static const char* sf_get_instance_specialization(void)
+static const char* sf_get_instance_specialization()
 {
   return "6iJpylMXH6x4uTmmbhoXQE";
 }
 
+static void sf_check_dwork_consistency(SimStruct *S)
+{
+  if (sim_mode_is_rtw_gen(S) || sim_mode_is_external(S)) {
+    const uint32_T *sfunDWorkChecksum = sf_get_sfun_dwork_checksum();
+    mxArray *infoStruct = load_lab2_next_level_optimization_info();
+    mxArray* mxRTWDWorkChecksum = sf_get_dwork_info_from_mat_file(S,
+      sf_get_instance_specialization(), infoStruct, 20, "dworkChecksum");
+    if (mxRTWDWorkChecksum != NULL) {
+      double *pr = mxGetPr(mxRTWDWorkChecksum);
+      if ((uint32_T)pr[0] != sfunDWorkChecksum[0] ||
+          (uint32_T)pr[1] != sfunDWorkChecksum[1] ||
+          (uint32_T)pr[2] != sfunDWorkChecksum[2] ||
+          (uint32_T)pr[3] != sfunDWorkChecksum[3]) {
+        sf_mex_error_message("Code generation and simulation targets registered different sets of persistent variables for the block. "
+                             "External or Rapid Accelerator mode simulation requires code generation and simulation targets to "
+                             "register the same set of persistent variables for this block. "
+                             "This discrepancy is typically caused by MATLAB functions that have different code paths for "
+                             "simulation and code generation targets where these code paths define different sets of persistent variables. "
+                             "Please identify these code paths in the offending block and rewrite the MATLAB code so that "
+                             "the set of persistent variables is the same between simulation and code generation.");
+      }
+    }
+  }
+}
+
 static void sf_opaque_initialize_c20_lab2_next_level(void *chartInstanceVar)
 {
+  sf_check_dwork_consistency(((SFc20_lab2_next_levelInstanceStruct*)
+    chartInstanceVar)->S);
   chart_debug_initialization(((SFc20_lab2_next_levelInstanceStruct*)
     chartInstanceVar)->S,0);
   initialize_params_c20_lab2_next_level((SFc20_lab2_next_levelInstanceStruct*)
@@ -928,6 +923,12 @@ static void sf_opaque_disable_c20_lab2_next_level(void *chartInstanceVar)
 static void sf_opaque_gateway_c20_lab2_next_level(void *chartInstanceVar)
 {
   sf_c20_lab2_next_level((SFc20_lab2_next_levelInstanceStruct*) chartInstanceVar);
+}
+
+static void sf_opaque_ext_mode_exec_c20_lab2_next_level(void *chartInstanceVar)
+{
+  ext_mode_exec_c20_lab2_next_level((SFc20_lab2_next_levelInstanceStruct*)
+    chartInstanceVar);
 }
 
 extern const mxArray* sf_internal_get_sim_state_c20_lab2_next_level(SimStruct* S)
@@ -997,14 +998,15 @@ static void sf_opaque_terminate_c20_lab2_next_level(void *chartInstanceVar)
     SimStruct *S = ((SFc20_lab2_next_levelInstanceStruct*) chartInstanceVar)->S;
     if (sim_mode_is_rtw_gen(S) || sim_mode_is_external(S)) {
       sf_clear_rtw_identifier(S);
-      unload_lab2_next_level_optimization_info();
     }
 
     finalize_c20_lab2_next_level((SFc20_lab2_next_levelInstanceStruct*)
       chartInstanceVar);
-    utFree((void *)chartInstanceVar);
+    free((void *)chartInstanceVar);
     ssSetUserData(S,NULL);
   }
+
+  unload_lab2_next_level_optimization_info();
 }
 
 static void sf_opaque_init_subchart_simstructs(void *chartInstanceVar)
@@ -1029,6 +1031,33 @@ static void mdlProcessParameters_c20_lab2_next_level(SimStruct *S)
   }
 }
 
+mxArray *sf_c20_lab2_next_level_get_testpoint_info(void)
+{
+  const char *infoEncStr[] = {
+    "100 S'varName','path'{{T\"is_active_c20_lab2_next_level\",T\"is_active_c20_lab2_next_level\"}}"
+  };
+
+  mxArray *mxTpInfo = sf_mex_decode_encoded_mx_struct_array(infoEncStr, 1, 10);
+  return mxTpInfo;
+}
+
+static void sf_set_sfun_dwork_info(SimStruct *S)
+{
+  const char *dworkEncStr[] = {
+    "100 S1x4'type','isSigned','wordLength','bias','slope','exponent','isComplex','size'{{T\"int32\",,,,,,M[0],M[]},{T\"boolean\",,,,,,M[0],M[]},{T\"boolean\",,,,,,M[0],M[]},{T\"uint8\",,,,,,M[0],M[]}}"
+  };
+
+  sf_set_encoded_dwork_info(S, dworkEncStr, 4, 10);
+}
+
+static uint32_T* sf_get_sfun_dwork_checksum()
+{
+  static uint32_T checksum[4] = { 3851270630U, 3363230343U, 1651207761U,
+    946165807U };
+
+  return checksum;
+}
+
 static void mdlSetWorkWidths_c20_lab2_next_level(SimStruct *S)
 {
   if (sim_mode_is_rtw_gen(S) || sim_mode_is_external(S)) {
@@ -1044,7 +1073,6 @@ static void mdlSetWorkWidths_c20_lab2_next_level(SimStruct *S)
     ssSetNotMultipleInlinable(S,sf_rtw_info_uint_prop(S,
       sf_get_instance_specialization(),infoStruct,20,
       "gatewayCannotBeInlinedMultipleTimes"));
-    sf_update_buildInfo(S,sf_get_instance_specialization(),infoStruct,20);
     if (chartIsInlinable) {
       ssSetInputPortOptimOpts(S, 0, SS_REUSABLE_AND_LOCAL);
       ssSetInputPortOptimOpts(S, 1, SS_REUSABLE_AND_LOCAL);
@@ -1054,30 +1082,17 @@ static void mdlSetWorkWidths_c20_lab2_next_level(SimStruct *S)
         infoStruct,20,1);
     }
 
-    {
-      unsigned int outPortIdx;
-      for (outPortIdx=1; outPortIdx<=1; ++outPortIdx) {
-        ssSetOutputPortOptimizeInIR(S, outPortIdx, 1U);
-      }
-    }
-
-    {
-      unsigned int inPortIdx;
-      for (inPortIdx=0; inPortIdx < 2; ++inPortIdx) {
-        ssSetInputPortOptimizeInIR(S, inPortIdx, 1U);
-      }
-    }
-
     sf_set_rtw_dwork_info(S,sf_get_instance_specialization(),infoStruct,20);
     ssSetHasSubFunctions(S,!(chartIsInlinable));
   } else {
+    sf_set_sfun_dwork_info(S);
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(4055680554U));
-  ssSetChecksum1(S,(3734395427U));
-  ssSetChecksum2(S,(141929304U));
-  ssSetChecksum3(S,(3549941679U));
+  ssSetChecksum0(S,(1171952331U));
+  ssSetChecksum1(S,(838713659U));
+  ssSetChecksum2(S,(3850701576U));
+  ssSetChecksum3(S,(2586606038U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
   ssSupportsMultipleExecInstances(S,1);
@@ -1093,7 +1108,7 @@ static void mdlRTW_c20_lab2_next_level(SimStruct *S)
 static void mdlStart_c20_lab2_next_level(SimStruct *S)
 {
   SFc20_lab2_next_levelInstanceStruct *chartInstance;
-  chartInstance = (SFc20_lab2_next_levelInstanceStruct *)utMalloc(sizeof
+  chartInstance = (SFc20_lab2_next_levelInstanceStruct *)malloc(sizeof
     (SFc20_lab2_next_levelInstanceStruct));
   memset(chartInstance, 0, sizeof(SFc20_lab2_next_levelInstanceStruct));
   if (chartInstance==NULL) {
@@ -1124,7 +1139,8 @@ static void mdlStart_c20_lab2_next_level(SimStruct *S)
   chartInstance->chartInfo.mdlStart = mdlStart_c20_lab2_next_level;
   chartInstance->chartInfo.mdlSetWorkWidths =
     mdlSetWorkWidths_c20_lab2_next_level;
-  chartInstance->chartInfo.extModeExec = NULL;
+  chartInstance->chartInfo.extModeExec =
+    sf_opaque_ext_mode_exec_c20_lab2_next_level;
   chartInstance->chartInfo.restoreLastMajorStepConfiguration = NULL;
   chartInstance->chartInfo.restoreBeforeLastMajorStepConfiguration = NULL;
   chartInstance->chartInfo.storeCurrentConfiguration = NULL;
