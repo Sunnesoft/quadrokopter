@@ -6,7 +6,7 @@ CPU = AMD64
 
 MACHINE     = lab2_next_level
 TARGET      = sfun
-CHART_SRCS 	= c1_lab2_next_level.c c2_lab2_next_level.c c3_lab2_next_level.c c5_lab2_next_level.c c6_lab2_next_level.c c7_lab2_next_level.c c9_lab2_next_level.c c10_lab2_next_level.c c11_lab2_next_level.c c14_lab2_next_level.c c15_lab2_next_level.c c16_lab2_next_level.c c17_lab2_next_level.c c18_lab2_next_level.c c19_lab2_next_level.c c20_lab2_next_level.c c21_lab2_next_level.c
+CHART_SRCS 	= c1_lab2_next_level.c c2_lab2_next_level.c c3_lab2_next_level.c c5_lab2_next_level.c c6_lab2_next_level.c c7_lab2_next_level.c c9_lab2_next_level.c c10_lab2_next_level.c c11_lab2_next_level.c c16_lab2_next_level.c c17_lab2_next_level.c c18_lab2_next_level.c c19_lab2_next_level.c c20_lab2_next_level.c c21_lab2_next_level.c c22_lab2_next_level.c c23_lab2_next_level.c c24_lab2_next_level.c
 MACHINE_SRC	= lab2_next_level_sfun.c
 MACHINE_REG = lab2_next_level_sfun_registry.c
 MAKEFILE    = lab2_next_level_sfun.mak

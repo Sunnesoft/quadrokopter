@@ -11,14 +11,15 @@
 #include "c9_lab2_next_level.h"
 #include "c10_lab2_next_level.h"
 #include "c11_lab2_next_level.h"
-#include "c14_lab2_next_level.h"
-#include "c15_lab2_next_level.h"
 #include "c16_lab2_next_level.h"
 #include "c17_lab2_next_level.h"
 #include "c18_lab2_next_level.h"
 #include "c19_lab2_next_level.h"
 #include "c20_lab2_next_level.h"
 #include "c21_lab2_next_level.h"
+#include "c22_lab2_next_level.h"
+#include "c23_lab2_next_level.h"
+#include "c24_lab2_next_level.h"
 
 /* Type Definitions */
 
@@ -90,16 +91,6 @@ unsigned int sf_lab2_next_level_method_dispatcher(SimStruct *simstructPtr,
     return 1;
   }
 
-  if (chartFileNumber==14) {
-    c14_lab2_next_level_method_dispatcher(simstructPtr, method, data);
-    return 1;
-  }
-
-  if (chartFileNumber==15) {
-    c15_lab2_next_level_method_dispatcher(simstructPtr, method, data);
-    return 1;
-  }
-
   if (chartFileNumber==16) {
     c16_lab2_next_level_method_dispatcher(simstructPtr, method, data);
     return 1;
@@ -127,6 +118,21 @@ unsigned int sf_lab2_next_level_method_dispatcher(SimStruct *simstructPtr,
 
   if (chartFileNumber==21) {
     c21_lab2_next_level_method_dispatcher(simstructPtr, method, data);
+    return 1;
+  }
+
+  if (chartFileNumber==22) {
+    c22_lab2_next_level_method_dispatcher(simstructPtr, method, data);
+    return 1;
+  }
+
+  if (chartFileNumber==23) {
+    c23_lab2_next_level_method_dispatcher(simstructPtr, method, data);
+    return 1;
+  }
+
+  if (chartFileNumber==24) {
+    c24_lab2_next_level_method_dispatcher(simstructPtr, method, data);
     return 1;
   }
 
@@ -202,10 +208,10 @@ unsigned int sf_lab2_next_level_process_check_sum_call( int nlhs, mxArray *
       ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(0U);
       ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(0U);
     } else if (!strcmp(commandName,"makefile")) {
-      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(278345986U);
-      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2061549105U);
-      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(212907991U);
-      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(652581956U);
+      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1475619435U);
+      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(4058332884U);
+      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2687666632U);
+      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2277299222U);
     } else if (nrhs==3 && !strcmp(commandName,"chart")) {
       unsigned int chartFileNumber;
       chartFileNumber = (unsigned int)mxGetScalar(prhs[2]);
@@ -273,20 +279,6 @@ unsigned int sf_lab2_next_level_process_check_sum_call( int nlhs, mxArray *
           break;
         }
 
-       case 14:
-        {
-          extern void sf_c14_lab2_next_level_get_check_sum(mxArray *plhs[]);
-          sf_c14_lab2_next_level_get_check_sum(plhs);
-          break;
-        }
-
-       case 15:
-        {
-          extern void sf_c15_lab2_next_level_get_check_sum(mxArray *plhs[]);
-          sf_c15_lab2_next_level_get_check_sum(plhs);
-          break;
-        }
-
        case 16:
         {
           extern void sf_c16_lab2_next_level_get_check_sum(mxArray *plhs[]);
@@ -329,6 +321,27 @@ unsigned int sf_lab2_next_level_process_check_sum_call( int nlhs, mxArray *
           break;
         }
 
+       case 22:
+        {
+          extern void sf_c22_lab2_next_level_get_check_sum(mxArray *plhs[]);
+          sf_c22_lab2_next_level_get_check_sum(plhs);
+          break;
+        }
+
+       case 23:
+        {
+          extern void sf_c23_lab2_next_level_get_check_sum(mxArray *plhs[]);
+          sf_c23_lab2_next_level_get_check_sum(plhs);
+          break;
+        }
+
+       case 24:
+        {
+          extern void sf_c24_lab2_next_level_get_check_sum(mxArray *plhs[]);
+          sf_c24_lab2_next_level_get_check_sum(plhs);
+          break;
+        }
+
        default:
         ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(0.0);
         ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(0.0);
@@ -344,10 +357,10 @@ unsigned int sf_lab2_next_level_process_check_sum_call( int nlhs, mxArray *
       return 0;
     }
   } else {
-    ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(2458926927U);
-    ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(4166862691U);
-    ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(909636785U);
-    ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(3989020688U);
+    ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3211655770U);
+    ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(912120558U);
+    ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2343958268U);
+    ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(3232031223U);
   }
 
   return 1;
@@ -397,7 +410,7 @@ unsigned int sf_lab2_next_level_autoinheritance_info( int nlhs, mxArray * plhs[]
 
      case 2:
       {
-        if (strcmp(aiChksum, "jXCiqRXtpmKqR30xY9snCE") == 0) {
+        if (strcmp(aiChksum, "JquTjZK7IzwTTeKVqMBsEF") == 0) {
           extern mxArray *sf_c2_lab2_next_level_get_autoinheritance_info(void);
           plhs[0] = sf_c2_lab2_next_level_get_autoinheritance_info();
           break;
@@ -409,7 +422,7 @@ unsigned int sf_lab2_next_level_autoinheritance_info( int nlhs, mxArray * plhs[]
 
      case 3:
       {
-        if (strcmp(aiChksum, "jXCiqRXtpmKqR30xY9snCE") == 0) {
+        if (strcmp(aiChksum, "WPpaiSKfiARUZrtKyOnfyF") == 0) {
           extern mxArray *sf_c3_lab2_next_level_get_autoinheritance_info(void);
           plhs[0] = sf_c3_lab2_next_level_get_autoinheritance_info();
           break;
@@ -469,7 +482,7 @@ unsigned int sf_lab2_next_level_autoinheritance_info( int nlhs, mxArray * plhs[]
 
      case 10:
       {
-        if (strcmp(aiChksum, "j33284cgAhzVWjnM0ydLmD") == 0) {
+        if (strcmp(aiChksum, "V878yxmFC9oe7WGApG5anC") == 0) {
           extern mxArray *sf_c10_lab2_next_level_get_autoinheritance_info(void);
           plhs[0] = sf_c10_lab2_next_level_get_autoinheritance_info();
           break;
@@ -491,33 +504,9 @@ unsigned int sf_lab2_next_level_autoinheritance_info( int nlhs, mxArray * plhs[]
         break;
       }
 
-     case 14:
-      {
-        if (strcmp(aiChksum, "V878yxmFC9oe7WGApG5anC") == 0) {
-          extern mxArray *sf_c14_lab2_next_level_get_autoinheritance_info(void);
-          plhs[0] = sf_c14_lab2_next_level_get_autoinheritance_info();
-          break;
-        }
-
-        plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
-        break;
-      }
-
-     case 15:
-      {
-        if (strcmp(aiChksum, "WPpaiSKfiARUZrtKyOnfyF") == 0) {
-          extern mxArray *sf_c15_lab2_next_level_get_autoinheritance_info(void);
-          plhs[0] = sf_c15_lab2_next_level_get_autoinheritance_info();
-          break;
-        }
-
-        plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
-        break;
-      }
-
      case 16:
       {
-        if (strcmp(aiChksum, "LwWzKcNeoaKftINKW0CKOE") == 0) {
+        if (strcmp(aiChksum, "jXCiqRXtpmKqR30xY9snCE") == 0) {
           extern mxArray *sf_c16_lab2_next_level_get_autoinheritance_info(void);
           plhs[0] = sf_c16_lab2_next_level_get_autoinheritance_info();
           break;
@@ -580,6 +569,42 @@ unsigned int sf_lab2_next_level_autoinheritance_info( int nlhs, mxArray * plhs[]
         if (strcmp(aiChksum, "j33284cgAhzVWjnM0ydLmD") == 0) {
           extern mxArray *sf_c21_lab2_next_level_get_autoinheritance_info(void);
           plhs[0] = sf_c21_lab2_next_level_get_autoinheritance_info();
+          break;
+        }
+
+        plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
+        break;
+      }
+
+     case 22:
+      {
+        if (strcmp(aiChksum, "jXCiqRXtpmKqR30xY9snCE") == 0) {
+          extern mxArray *sf_c22_lab2_next_level_get_autoinheritance_info(void);
+          plhs[0] = sf_c22_lab2_next_level_get_autoinheritance_info();
+          break;
+        }
+
+        plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
+        break;
+      }
+
+     case 23:
+      {
+        if (strcmp(aiChksum, "LwWzKcNeoaKftINKW0CKOE") == 0) {
+          extern mxArray *sf_c23_lab2_next_level_get_autoinheritance_info(void);
+          plhs[0] = sf_c23_lab2_next_level_get_autoinheritance_info();
+          break;
+        }
+
+        plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
+        break;
+      }
+
+     case 24:
+      {
+        if (strcmp(aiChksum, "j33284cgAhzVWjnM0ydLmD") == 0) {
+          extern mxArray *sf_c24_lab2_next_level_get_autoinheritance_info(void);
+          plhs[0] = sf_c24_lab2_next_level_get_autoinheritance_info();
           break;
         }
 
@@ -721,28 +746,6 @@ unsigned int sf_lab2_next_level_get_eml_resolved_functions_info( int nlhs,
         break;
       }
 
-     case 14:
-      {
-        extern const mxArray
-          *sf_c14_lab2_next_level_get_eml_resolved_functions_info(void);
-        mxArray *persistentMxArray = (mxArray *)
-          sf_c14_lab2_next_level_get_eml_resolved_functions_info();
-        plhs[0] = mxDuplicateArray(persistentMxArray);
-        mxDestroyArray(persistentMxArray);
-        break;
-      }
-
-     case 15:
-      {
-        extern const mxArray
-          *sf_c15_lab2_next_level_get_eml_resolved_functions_info(void);
-        mxArray *persistentMxArray = (mxArray *)
-          sf_c15_lab2_next_level_get_eml_resolved_functions_info();
-        plhs[0] = mxDuplicateArray(persistentMxArray);
-        mxDestroyArray(persistentMxArray);
-        break;
-      }
-
      case 16:
       {
         extern const mxArray
@@ -809,6 +812,39 @@ unsigned int sf_lab2_next_level_get_eml_resolved_functions_info( int nlhs,
         break;
       }
 
+     case 22:
+      {
+        extern const mxArray
+          *sf_c22_lab2_next_level_get_eml_resolved_functions_info(void);
+        mxArray *persistentMxArray = (mxArray *)
+          sf_c22_lab2_next_level_get_eml_resolved_functions_info();
+        plhs[0] = mxDuplicateArray(persistentMxArray);
+        mxDestroyArray(persistentMxArray);
+        break;
+      }
+
+     case 23:
+      {
+        extern const mxArray
+          *sf_c23_lab2_next_level_get_eml_resolved_functions_info(void);
+        mxArray *persistentMxArray = (mxArray *)
+          sf_c23_lab2_next_level_get_eml_resolved_functions_info();
+        plhs[0] = mxDuplicateArray(persistentMxArray);
+        mxDestroyArray(persistentMxArray);
+        break;
+      }
+
+     case 24:
+      {
+        extern const mxArray
+          *sf_c24_lab2_next_level_get_eml_resolved_functions_info(void);
+        mxArray *persistentMxArray = (mxArray *)
+          sf_c24_lab2_next_level_get_eml_resolved_functions_info();
+        plhs[0] = mxDuplicateArray(persistentMxArray);
+        mxDestroyArray(persistentMxArray);
+        break;
+      }
+
      default:
       plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
     }
@@ -855,7 +891,7 @@ unsigned int sf_lab2_next_level_third_party_uses_info( int nlhs, mxArray * plhs[
 
      case 2:
       {
-        if (strcmp(tpChksum, "XJtCwoNhTkrbDVsoVz2uyG") == 0) {
+        if (strcmp(tpChksum, "cods73WN44Bs2OHeqUGlYE") == 0) {
           extern mxArray *sf_c2_lab2_next_level_third_party_uses_info(void);
           plhs[0] = sf_c2_lab2_next_level_third_party_uses_info();
           break;
@@ -864,7 +900,7 @@ unsigned int sf_lab2_next_level_third_party_uses_info( int nlhs, mxArray * plhs[
 
      case 3:
       {
-        if (strcmp(tpChksum, "XJtCwoNhTkrbDVsoVz2uyG") == 0) {
+        if (strcmp(tpChksum, "rjGLt8apbbdIPjqgtOa4OF") == 0) {
           extern mxArray *sf_c3_lab2_next_level_third_party_uses_info(void);
           plhs[0] = sf_c3_lab2_next_level_third_party_uses_info();
           break;
@@ -909,7 +945,7 @@ unsigned int sf_lab2_next_level_third_party_uses_info( int nlhs, mxArray * plhs[
 
      case 10:
       {
-        if (strcmp(tpChksum, "LmM1Rax0nqu4g4w1eNpScE") == 0) {
+        if (strcmp(tpChksum, "uMiMxksBgc6vc6nryy9JJD") == 0) {
           extern mxArray *sf_c10_lab2_next_level_third_party_uses_info(void);
           plhs[0] = sf_c10_lab2_next_level_third_party_uses_info();
           break;
@@ -925,27 +961,9 @@ unsigned int sf_lab2_next_level_third_party_uses_info( int nlhs, mxArray * plhs[
         }
       }
 
-     case 14:
-      {
-        if (strcmp(tpChksum, "uMiMxksBgc6vc6nryy9JJD") == 0) {
-          extern mxArray *sf_c14_lab2_next_level_third_party_uses_info(void);
-          plhs[0] = sf_c14_lab2_next_level_third_party_uses_info();
-          break;
-        }
-      }
-
-     case 15:
-      {
-        if (strcmp(tpChksum, "rjGLt8apbbdIPjqgtOa4OF") == 0) {
-          extern mxArray *sf_c15_lab2_next_level_third_party_uses_info(void);
-          plhs[0] = sf_c15_lab2_next_level_third_party_uses_info();
-          break;
-        }
-      }
-
      case 16:
       {
-        if (strcmp(tpChksum, "6iJpylMXH6x4uTmmbhoXQE") == 0) {
+        if (strcmp(tpChksum, "XJtCwoNhTkrbDVsoVz2uyG") == 0) {
           extern mxArray *sf_c16_lab2_next_level_third_party_uses_info(void);
           plhs[0] = sf_c16_lab2_next_level_third_party_uses_info();
           break;
@@ -997,6 +1015,33 @@ unsigned int sf_lab2_next_level_third_party_uses_info( int nlhs, mxArray * plhs[
         }
       }
 
+     case 22:
+      {
+        if (strcmp(tpChksum, "XJtCwoNhTkrbDVsoVz2uyG") == 0) {
+          extern mxArray *sf_c22_lab2_next_level_third_party_uses_info(void);
+          plhs[0] = sf_c22_lab2_next_level_third_party_uses_info();
+          break;
+        }
+      }
+
+     case 23:
+      {
+        if (strcmp(tpChksum, "6iJpylMXH6x4uTmmbhoXQE") == 0) {
+          extern mxArray *sf_c23_lab2_next_level_third_party_uses_info(void);
+          plhs[0] = sf_c23_lab2_next_level_third_party_uses_info();
+          break;
+        }
+      }
+
+     case 24:
+      {
+        if (strcmp(tpChksum, "LmM1Rax0nqu4g4w1eNpScE") == 0) {
+          extern mxArray *sf_c24_lab2_next_level_third_party_uses_info(void);
+          plhs[0] = sf_c24_lab2_next_level_third_party_uses_info();
+          break;
+        }
+      }
+
      default:
       plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
     }
@@ -1009,7 +1054,7 @@ void lab2_next_level_debug_initialize(struct SfDebugInstanceStruct*
   debugInstance)
 {
   _lab2_next_levelMachineNumber_ = sf_debug_initialize_machine(debugInstance,
-    "lab2_next_level","sfun",0,17,0,0,0);
+    "lab2_next_level","sfun",0,18,0,0,0);
   sf_debug_set_machine_event_thresholds(debugInstance,
     _lab2_next_levelMachineNumber_,0,0);
   sf_debug_set_machine_data_thresholds(debugInstance,

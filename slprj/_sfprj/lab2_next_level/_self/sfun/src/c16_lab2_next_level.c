@@ -175,49 +175,38 @@ static void sf_c16_lab2_next_level(SFc16_lab2_next_levelInstanceStruct
   real_T c16_nargout = 1.0;
   real_T c16_y;
   int32_T c16_b_i;
-  real_T c16_b;
-  real_T c16_b_y;
   real_T c16_A;
   real_T c16_x;
   real_T c16_b_x;
+  real_T c16_b_y;
+  real_T c16_b;
   real_T c16_c_y;
-  real_T c16_c_x;
-  real_T c16_d_x;
-  real_T c16_b_b;
-  real_T c16_b_A;
-  real_T c16_e_x;
-  real_T c16_f_x;
-  real_T c16_d_y;
   real_T c16_a;
+  real_T c16_b_b;
+  real_T c16_d_y;
+  real_T c16_b_a;
   real_T c16_c_b;
   real_T c16_e_y;
-  real_T c16_b_a;
+  real_T c16_c_x;
+  real_T c16_d_x;
   real_T c16_d_b;
   real_T c16_f_y;
-  real_T c16_c_a;
-  real_T c16_e_b;
-  real_T c16_g_y;
-  real_T c16_g_x;
-  real_T c16_h_x;
-  real_T c16_f_b;
-  real_T c16_h_y;
-  real_T c16_c_A;
+  real_T c16_b_A;
   real_T c16_B;
-  real_T c16_i_x;
+  real_T c16_e_x;
+  real_T c16_g_y;
+  real_T c16_f_x;
+  real_T c16_h_y;
+  real_T c16_e_b;
   real_T c16_i_y;
-  real_T c16_j_x;
+  real_T c16_c_a;
+  real_T c16_f_b;
   real_T c16_j_y;
-  real_T c16_d_a;
-  real_T c16_g_b;
-  real_T c16_k_y;
-  real_T c16_e_a;
-  real_T c16_h_b;
-  real_T c16_l_y;
   real_T *c16_b_wc;
-  real_T *c16_m_y;
+  real_T *c16_k_y;
   real_T (*c16_b_signal)[10];
   c16_b_wc = (real_T *)ssGetInputPortSignal(chartInstance->S, 1);
-  c16_m_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
+  c16_k_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   c16_b_signal = (real_T (*)[10])ssGetInputPortSignal(chartInstance->S, 0);
   _sfTime_ = (real_T)ssGetT(chartInstance->S);
   _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 11U, chartInstance->c16_sfEvent);
@@ -225,7 +214,7 @@ static void sf_c16_lab2_next_level(SFc16_lab2_next_levelInstanceStruct
     _SFD_DATA_RANGE_CHECK((*c16_b_signal)[c16_i0], 0U);
   }
 
-  _SFD_DATA_RANGE_CHECK(*c16_m_y, 1U);
+  _SFD_DATA_RANGE_CHECK(*c16_k_y, 1U);
   _SFD_DATA_RANGE_CHECK(*c16_b_wc, 2U);
   chartInstance->c16_sfEvent = CALL_EVENT;
   _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 11U, chartInstance->c16_sfEvent);
@@ -245,8 +234,7 @@ static void sf_c16_lab2_next_level(SFc16_lab2_next_levelInstanceStruct
     c16_sf_marshallIn);
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c16_k, 4U, c16_sf_marshallOut,
     c16_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c16_w, 5U, c16_sf_marshallOut,
-    c16_sf_marshallIn);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c16_w, 5U, c16_sf_marshallOut);
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c16_h, 6U, c16_sf_marshallOut,
     c16_sf_marshallIn);
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c16_nargin, 7U, c16_sf_marshallOut,
@@ -273,62 +261,50 @@ static void sf_c16_lab2_next_level(SFc16_lab2_next_levelInstanceStruct
     CV_EML_FOR(0, 1, 0, 1);
     _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, 10);
     c16_k = c16_i - 1.0;
-    _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, 12);
-    c16_b = c16_k;
-    c16_b_y = 6.2831853071795862 * c16_b;
-    c16_A = c16_b_y;
-    c16_x = c16_A;
-    c16_b_x = c16_x;
-    c16_c_y = c16_b_x / 9.0;
-    c16_c_x = c16_c_y;
-    c16_d_x = c16_c_x;
-    c16_d_x = muDoubleScalarCos(c16_d_x);
-    c16_b_b = 1.0 - c16_d_x;
-    c16_w = 0.5 * c16_b_b;
-    _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, 14);
+    _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, 11);
+    c16_w = 1.0;
+    _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, 13);
     if (CV_EML_IF(0, 1, 0, c16_i != c16_s)) {
+      _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, 14);
+      c16_A = c16_wc;
+      c16_x = c16_A;
+      c16_b_x = c16_x;
+      c16_b_y = c16_b_x / 3.1415926535897931;
+      c16_h = 1.0 - c16_b_y;
       _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, 15);
-      c16_b_A = c16_wc;
-      c16_e_x = c16_b_A;
-      c16_f_x = c16_e_x;
-      c16_d_y = c16_f_x / 3.1415926535897931;
-      c16_h = 1.0 - c16_d_y;
+      c16_b = c16_h;
+      c16_c_y = c16_b;
+      c16_a = c16_c_y;
+      c16_b_b = c16_signal[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("signal",
+        (int32_T)_SFD_INTEGER_CHECK("s-k", c16_s - c16_k), 1, 10, 1, 0) - 1];
+      c16_d_y = c16_a * c16_b_b;
+      c16_y += c16_d_y;
       _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, 16);
-      c16_a = c16_w;
-      c16_c_b = c16_h;
-      c16_e_y = c16_a * c16_c_b;
-      c16_b_a = c16_e_y;
-      c16_d_b = c16_signal[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("signal",
-        (int32_T)_SFD_INTEGER_CHECK("s-k", c16_s - c16_k), 1, 10, 1, 0) - 1];
-      c16_f_y = c16_b_a * c16_d_b;
-      c16_y += c16_f_y;
-      _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, 17);
     } else {
+      _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, 19);
+      c16_b_a = c16_wc;
+      c16_c_b = c16_k - c16_M;
+      c16_e_y = c16_b_a * c16_c_b;
+      c16_c_x = c16_e_y;
+      c16_d_x = c16_c_x;
+      c16_d_x = muDoubleScalarSin(c16_d_x);
+      c16_d_b = c16_k - c16_M;
+      c16_f_y = 3.1415926535897931 * c16_d_b;
+      c16_b_A = -c16_d_x;
+      c16_B = c16_f_y;
+      c16_e_x = c16_b_A;
+      c16_g_y = c16_B;
+      c16_f_x = c16_e_x;
+      c16_h_y = c16_g_y;
+      c16_h = c16_f_x / c16_h_y;
       _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, 20);
-      c16_c_a = c16_wc;
-      c16_e_b = c16_k - c16_M;
-      c16_g_y = c16_c_a * c16_e_b;
-      c16_g_x = c16_g_y;
-      c16_h_x = c16_g_x;
-      c16_h_x = muDoubleScalarSin(c16_h_x);
-      c16_f_b = c16_k - c16_M;
-      c16_h_y = 3.1415926535897931 * c16_f_b;
-      c16_c_A = -c16_h_x;
-      c16_B = c16_h_y;
-      c16_i_x = c16_c_A;
-      c16_i_y = c16_B;
-      c16_j_x = c16_i_x;
-      c16_j_y = c16_i_y;
-      c16_h = c16_j_x / c16_j_y;
-      _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, 21);
-      c16_d_a = c16_w;
-      c16_g_b = c16_h;
-      c16_k_y = c16_d_a * c16_g_b;
-      c16_e_a = c16_k_y;
-      c16_h_b = c16_signal[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("signal",
+      c16_e_b = c16_h;
+      c16_i_y = c16_e_b;
+      c16_c_a = c16_i_y;
+      c16_f_b = c16_signal[(int32_T)(real_T)_SFD_EML_ARRAY_BOUNDS_CHECK("signal",
         (int32_T)_SFD_INTEGER_CHECK("s-k", c16_s - c16_k), 1, 10, 1, 0) - 1];
-      c16_l_y = c16_e_a * c16_h_b;
-      c16_y += c16_l_y;
+      c16_j_y = c16_c_a * c16_f_b;
+      c16_y += c16_j_y;
     }
 
     c16_b_i++;
@@ -336,9 +312,9 @@ static void sf_c16_lab2_next_level(SFc16_lab2_next_levelInstanceStruct
   }
 
   CV_EML_FOR(0, 1, 0, 0);
-  _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, -21);
+  _SFD_EML_CALL(0U, chartInstance->c16_sfEvent, -20);
   _SFD_SYMBOL_SCOPE_POP();
-  *c16_m_y = c16_y;
+  *c16_k_y = c16_y;
   _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 11U, chartInstance->c16_sfEvent);
   _SFD_CHECK_FOR_STATE_INCONSISTENCY(_lab2_next_levelMachineNumber_,
     chartInstance->chartNumber, chartInstance->instanceNumber);
@@ -446,102 +422,83 @@ static const mxArray *c16_b_sf_marshallOut(void *chartInstanceVoid, void
 const mxArray *sf_c16_lab2_next_level_get_eml_resolved_functions_info(void)
 {
   const mxArray *c16_nameCaptureInfo;
-  c16_ResolvedFunctionInfo c16_info[9];
-  c16_ResolvedFunctionInfo (*c16_b_info)[9];
+  c16_ResolvedFunctionInfo c16_info[7];
+  c16_ResolvedFunctionInfo (*c16_b_info)[7];
   const mxArray *c16_m0 = NULL;
   int32_T c16_i4;
   c16_ResolvedFunctionInfo *c16_r0;
   c16_nameCaptureInfo = NULL;
   c16_nameCaptureInfo = NULL;
-  c16_b_info = (c16_ResolvedFunctionInfo (*)[9])c16_info;
+  c16_b_info = (c16_ResolvedFunctionInfo (*)[7])c16_info;
   (*c16_b_info)[0].context = "";
-  (*c16_b_info)[0].name = "mtimes";
+  (*c16_b_info)[0].name = "mrdivide";
   (*c16_b_info)[0].dominantType = "double";
   (*c16_b_info)[0].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mtimes.m";
-  (*c16_b_info)[0].fileTimeLo = 1289512492U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
+  (*c16_b_info)[0].fileTimeLo = 1357944348U;
   (*c16_b_info)[0].fileTimeHi = 0U;
-  (*c16_b_info)[0].mFileTimeLo = 0U;
+  (*c16_b_info)[0].mFileTimeLo = 1319722766U;
   (*c16_b_info)[0].mFileTimeHi = 0U;
-  (*c16_b_info)[1].context = "";
-  (*c16_b_info)[1].name = "mrdivide";
+  (*c16_b_info)[1].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
+  (*c16_b_info)[1].name = "rdivide";
   (*c16_b_info)[1].dominantType = "double";
   (*c16_b_info)[1].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
-  (*c16_b_info)[1].fileTimeLo = 1357944348U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
+  (*c16_b_info)[1].fileTimeLo = 1346503188U;
   (*c16_b_info)[1].fileTimeHi = 0U;
-  (*c16_b_info)[1].mFileTimeLo = 1319722766U;
+  (*c16_b_info)[1].mFileTimeLo = 0U;
   (*c16_b_info)[1].mFileTimeHi = 0U;
   (*c16_b_info)[2].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
-  (*c16_b_info)[2].name = "rdivide";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
+  (*c16_b_info)[2].name = "eml_scalexp_compatible";
   (*c16_b_info)[2].dominantType = "double";
   (*c16_b_info)[2].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c16_b_info)[2].fileTimeLo = 1346503188U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalexp_compatible.m";
+  (*c16_b_info)[2].fileTimeLo = 1286811596U;
   (*c16_b_info)[2].fileTimeHi = 0U;
   (*c16_b_info)[2].mFileTimeLo = 0U;
   (*c16_b_info)[2].mFileTimeHi = 0U;
   (*c16_b_info)[3].context =
     "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c16_b_info)[3].name = "eml_scalexp_compatible";
+  (*c16_b_info)[3].name = "eml_div";
   (*c16_b_info)[3].dominantType = "double";
   (*c16_b_info)[3].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalexp_compatible.m";
-  (*c16_b_info)[3].fileTimeLo = 1286811596U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_div.m";
+  (*c16_b_info)[3].fileTimeLo = 1313340610U;
   (*c16_b_info)[3].fileTimeHi = 0U;
   (*c16_b_info)[3].mFileTimeLo = 0U;
   (*c16_b_info)[3].mFileTimeHi = 0U;
-  (*c16_b_info)[4].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c16_b_info)[4].name = "eml_div";
+  (*c16_b_info)[4].context = "";
+  (*c16_b_info)[4].name = "mtimes";
   (*c16_b_info)[4].dominantType = "double";
   (*c16_b_info)[4].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_div.m";
-  (*c16_b_info)[4].fileTimeLo = 1313340610U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mtimes.m";
+  (*c16_b_info)[4].fileTimeLo = 1289512492U;
   (*c16_b_info)[4].fileTimeHi = 0U;
   (*c16_b_info)[4].mFileTimeLo = 0U;
   (*c16_b_info)[4].mFileTimeHi = 0U;
   (*c16_b_info)[5].context = "";
-  (*c16_b_info)[5].name = "cos";
+  (*c16_b_info)[5].name = "sin";
   (*c16_b_info)[5].dominantType = "double";
   (*c16_b_info)[5].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/cos.m";
-  (*c16_b_info)[5].fileTimeLo = 1343823172U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
+  (*c16_b_info)[5].fileTimeLo = 1343823186U;
   (*c16_b_info)[5].fileTimeHi = 0U;
   (*c16_b_info)[5].mFileTimeLo = 0U;
   (*c16_b_info)[5].mFileTimeHi = 0U;
   (*c16_b_info)[6].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/cos.m";
-  (*c16_b_info)[6].name = "eml_scalar_cos";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
+  (*c16_b_info)[6].name = "eml_scalar_sin";
   (*c16_b_info)[6].dominantType = "double";
   (*c16_b_info)[6].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_cos.m";
-  (*c16_b_info)[6].fileTimeLo = 1286811522U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_sin.m";
+  (*c16_b_info)[6].fileTimeLo = 1286811536U;
   (*c16_b_info)[6].fileTimeHi = 0U;
   (*c16_b_info)[6].mFileTimeLo = 0U;
   (*c16_b_info)[6].mFileTimeHi = 0U;
-  (*c16_b_info)[7].context = "";
-  (*c16_b_info)[7].name = "sin";
-  (*c16_b_info)[7].dominantType = "double";
-  (*c16_b_info)[7].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
-  (*c16_b_info)[7].fileTimeLo = 1343823186U;
-  (*c16_b_info)[7].fileTimeHi = 0U;
-  (*c16_b_info)[7].mFileTimeLo = 0U;
-  (*c16_b_info)[7].mFileTimeHi = 0U;
-  (*c16_b_info)[8].context =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sin.m";
-  (*c16_b_info)[8].name = "eml_scalar_sin";
-  (*c16_b_info)[8].dominantType = "double";
-  (*c16_b_info)[8].resolved =
-    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_sin.m";
-  (*c16_b_info)[8].fileTimeLo = 1286811536U;
-  (*c16_b_info)[8].fileTimeHi = 0U;
-  (*c16_b_info)[8].mFileTimeLo = 0U;
-  (*c16_b_info)[8].mFileTimeHi = 0U;
-  sf_mex_assign(&c16_m0, sf_mex_createstruct("nameCaptureInfo", 1, 9), FALSE);
-  for (c16_i4 = 0; c16_i4 < 9; c16_i4++) {
+  sf_mex_assign(&c16_m0, sf_mex_createstruct("nameCaptureInfo", 1, 7), FALSE);
+  for (c16_i4 = 0; c16_i4 < 7; c16_i4++) {
     c16_r0 = &c16_info[c16_i4];
     sf_mex_addfield(c16_m0, sf_mex_create("nameCaptureInfo", c16_r0->context, 15,
       0U, 0U, 0U, 2, 1, strlen(c16_r0->context)), "context", "nameCaptureInfo",
@@ -671,10 +628,10 @@ extern void utFree(void*);
 
 void sf_c16_lab2_next_level_get_check_sum(mxArray *plhs[])
 {
-  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3711787033U);
-  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3605563679U);
-  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(3826873277U);
-  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(3964627561U);
+  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3557339849U);
+  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2693185982U);
+  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(1436294798U);
+  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2986635900U);
 }
 
 mxArray *sf_c16_lab2_next_level_get_autoinheritance_info(void)
@@ -686,7 +643,7 @@ mxArray *sf_c16_lab2_next_level_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("LwWzKcNeoaKftINKW0CKOE");
+    mxArray *mxChecksum = mxCreateString("jXCiqRXtpmKqR30xY9snCE");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -854,9 +811,9 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
         /* Initialization of MATLAB Function Model Coverage */
         _SFD_CV_INIT_EML(0,1,1,1,0,0,0,1,0,0,0);
-        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,303);
-        _SFD_CV_INIT_EML_IF(0,1,0,148,158,-1,-2);
-        _SFD_CV_INIT_EML_FOR(0,1,0,77,89,303);
+        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,277);
+        _SFD_CV_INIT_EML_IF(0,1,0,122,132,-1,-2);
+        _SFD_CV_INIT_EML_FOR(0,1,0,77,89,277);
         _SFD_TRANS_COV_WTS(0,0,0,1,0);
         if (chartAlreadyPresent==0) {
           _SFD_TRANS_COV_MAPS(0,
@@ -900,7 +857,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
 static const char* sf_get_instance_specialization(void)
 {
-  return "6iJpylMXH6x4uTmmbhoXQE";
+  return "XJtCwoNhTkrbDVsoVz2uyG";
 }
 
 static void sf_opaque_initialize_c16_lab2_next_level(void *chartInstanceVar)
@@ -1074,10 +1031,10 @@ static void mdlSetWorkWidths_c16_lab2_next_level(SimStruct *S)
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(4055680554U));
-  ssSetChecksum1(S,(3734395427U));
-  ssSetChecksum2(S,(141929304U));
-  ssSetChecksum3(S,(3549941679U));
+  ssSetChecksum0(S,(167058084U));
+  ssSetChecksum1(S,(4094593174U));
+  ssSetChecksum2(S,(2158986303U));
+  ssSetChecksum3(S,(2984293827U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
   ssSupportsMultipleExecInstances(S,1);
