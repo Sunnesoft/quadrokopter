@@ -2,6 +2,7 @@
 
 #include "lab2_next_level_sfun.h"
 #include "c1_lab2_next_level.h"
+#include "c2_lab2_next_level.h"
 #include "c5_lab2_next_level.h"
 #include "c6_lab2_next_level.h"
 #include "c7_lab2_next_level.h"
@@ -37,6 +38,11 @@ unsigned int sf_lab2_next_level_method_dispatcher(SimStruct *simstructPtr,
 {
   if (chartFileNumber==1) {
     c1_lab2_next_level_method_dispatcher(simstructPtr, method, data);
+    return 1;
+  }
+
+  if (chartFileNumber==2) {
+    c2_lab2_next_level_method_dispatcher(simstructPtr, method, data);
     return 1;
   }
 
@@ -104,6 +110,13 @@ unsigned int sf_lab2_next_level_process_testpoint_info_call( int nlhs, mxArray *
       {
         extern mxArray *sf_c1_lab2_next_level_get_testpoint_info(void);
         plhs[0] = sf_c1_lab2_next_level_get_testpoint_info();
+        break;
+      }
+
+     case 2:
+      {
+        extern mxArray *sf_c2_lab2_next_level_get_testpoint_info(void);
+        plhs[0] = sf_c2_lab2_next_level_get_testpoint_info();
         break;
       }
 
@@ -203,10 +216,10 @@ unsigned int sf_lab2_next_level_process_check_sum_call( int nlhs, mxArray *
       ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(0U);
       ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(0U);
     } else if (!strcmp(commandName,"makefile")) {
-      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1535109578U);
-      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(607497413U);
-      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(4234361199U);
-      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(4227922469U);
+      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(2506991845U);
+      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3017123329U);
+      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(1953940138U);
+      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(228532997U);
     } else if (nrhs==3 && !strcmp(commandName,"chart")) {
       unsigned int chartFileNumber;
       chartFileNumber = (unsigned int)mxGetScalar(prhs[2]);
@@ -215,6 +228,13 @@ unsigned int sf_lab2_next_level_process_check_sum_call( int nlhs, mxArray *
         {
           extern void sf_c1_lab2_next_level_get_check_sum(mxArray *plhs[]);
           sf_c1_lab2_next_level_get_check_sum(plhs);
+          break;
+        }
+
+       case 2:
+        {
+          extern void sf_c2_lab2_next_level_get_check_sum(mxArray *plhs[]);
+          sf_c2_lab2_next_level_get_check_sum(plhs);
           break;
         }
 
@@ -282,10 +302,10 @@ unsigned int sf_lab2_next_level_process_check_sum_call( int nlhs, mxArray *
       return 0;
     }
   } else {
-    ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1353679063U);
-    ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3256356010U);
-    ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(4069023370U);
-    ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2639843387U);
+    ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(250904866U);
+    ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(292930703U);
+    ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(955862900U);
+    ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2838553653U);
   }
 
   return 1;
@@ -326,6 +346,18 @@ unsigned int sf_lab2_next_level_autoinheritance_info( int nlhs, mxArray * plhs[]
         if (strcmp(aiChksum, "0GYefm7ACLoVMzw0kmnljF") == 0) {
           extern mxArray *sf_c1_lab2_next_level_get_autoinheritance_info(void);
           plhs[0] = sf_c1_lab2_next_level_get_autoinheritance_info();
+          break;
+        }
+
+        plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
+        break;
+      }
+
+     case 2:
+      {
+        if (strcmp(aiChksum, "THIKj7K7i03gxM0Up0KFaD") == 0) {
+          extern mxArray *sf_c2_lab2_next_level_get_autoinheritance_info(void);
+          plhs[0] = sf_c2_lab2_next_level_get_autoinheritance_info();
           break;
         }
 
@@ -463,6 +495,17 @@ unsigned int sf_lab2_next_level_get_eml_resolved_functions_info( int nlhs,
         break;
       }
 
+     case 2:
+      {
+        extern const mxArray
+          *sf_c2_lab2_next_level_get_eml_resolved_functions_info(void);
+        mxArray *persistentMxArray = (mxArray *)
+          sf_c2_lab2_next_level_get_eml_resolved_functions_info();
+        plhs[0] = mxDuplicateArray(persistentMxArray);
+        mxDestroyArray(persistentMxArray);
+        break;
+      }
+
      case 5:
       {
         extern const mxArray
@@ -558,7 +601,7 @@ unsigned int sf_lab2_next_level_get_eml_resolved_functions_info( int nlhs,
 void lab2_next_level_debug_initialize(void)
 {
   _lab2_next_levelMachineNumber_ = sf_debug_initialize_machine("lab2_next_level",
-    "sfun",0,8,0,0,0);
+    "sfun",0,9,0,0,0);
   sf_debug_set_machine_event_thresholds(_lab2_next_levelMachineNumber_,0,0);
   sf_debug_set_machine_data_thresholds(_lab2_next_levelMachineNumber_,0);
 }
