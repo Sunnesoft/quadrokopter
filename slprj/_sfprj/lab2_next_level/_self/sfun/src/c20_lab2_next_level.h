@@ -31,6 +31,10 @@ typedef struct {
   ChartInfoStruct chartInfo;
   uint32_T chartNumber;
   uint32_T instanceNumber;
+  int32_T c20_sfEvent;
+  boolean_T c20_isStable;
+  boolean_T c20_doneDoubleBufferReInit;
+  uint8_T c20_is_active_c20_lab2_next_level;
 } SFc20_lab2_next_levelInstanceStruct;
 
 #endif                                 /*typedef_SFc20_lab2_next_levelInstanceStruct*/
