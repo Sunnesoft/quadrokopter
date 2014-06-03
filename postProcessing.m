@@ -57,6 +57,7 @@ outFns = {
 result = [;];
 
 h = figure(1);
+iter = 1;
 
 for i=1:1:N 
     t = load(strcat(path{1},fns{i},'.mat'));
@@ -76,9 +77,13 @@ for i=1:1:N
     
     for j=1:1:3    
         plot(f.ans.Time,f.ans.Data(:,j),'-m',f2.ans.Time,f2.ans.Data(:,j),'-r',t.ans.Time,t.ans.Data(:,j),'-g',n.ans.Time,n.ans.Data(:,j),'-b');
-        title(titleGraph{i}{j});
         legend('Скольз. средн.(лин)','Апер. фильтр','Истинн.','Зашумл.');
-        print(h,'-dpng',strcat('./results/',outFns{i}{j},'.png'));   
+        tt = xlabel('');     pos = get(tt,'Position'); delete(tt)
+        tt = title(strcat('Рисунок А.',num2str(iter),'.- ',titleGraph{i}{j}));
+        set(tt,'Position',pos);
+        set(gca, 'XAxisLocation','top')
+        print(h,'-dpng',strcat('./results/',num2str(iter,'%03d'),'___',outFns{i}{j},'.png'));   
+        iter = iter + 1;
         
         data = [;];
         data(1,:) = result(i,:,j);
@@ -88,8 +93,12 @@ for i=1:1:N
         colormap(summer);
         grid on
         legend(bbar,{'зашумл. от истинн.','отфильтр. от истинн.(лин.)','отфильтр. от истинн.(апер.)'});
-        title(titleVar{i}{j});
-        print(h,'-dpng',strcat('./results/',outFns{i}{j},'_bar.png'));
+        tt = xlabel('');     pos = get(tt,'Position'); delete(tt)
+        tt = title(strcat('Рисунок А.',num2str(iter),'.- ',titleVar{i}{j}));
+        set(tt,'Position',pos);
+        set(gca, 'XAxisLocation','top')
+        print(h,'-dpng',strcat('./results/',num2str(iter,'%03d'),'___',outFns{i}{j},'_bar.png'));
+        iter = iter + 1;
     end
 end
 
@@ -136,9 +145,13 @@ outFns = {
 
 for j=1:1:3  
     plot(f.ans.Time,f.ans.Data(:,j),'-m',f2.ans.Time,f2.ans.Data(:,j),'-r',t.ans.Time,t.ans.Data(:,j),'-g',n.ans.Time,n.ans.Data(:,j),'-b');
-    title(titlePlat{j});
+    tt = xlabel('');     pos = get(tt,'Position'); delete(tt)
+    tt = title(strcat('Рисунок А.',num2str(iter),'.- ',titlePlat{j}));
+    set(tt,'Position',pos);
+    set(gca, 'XAxisLocation','top')
     legend('Скольз. средн. фильтр','Апер. фильтр','Истинн.','Зашумл.');
-    print(h,'-dpng',strcat('./results/',outFns{j},'.png'));
+    print(h,'-dpng',strcat('./results/',num2str(iter,'%03d'),'___',outFns{j},'.png'));
+    iter = iter + 1;
 
     data = [;];
     data(1,:) = resplat(:,j);
@@ -148,9 +161,13 @@ for j=1:1:3
     bbar = bar(data);
     colormap(summer);
     grid on
-    title(titleVar{j});
+    tt = xlabel('');     pos = get(tt,'Position'); delete(tt)
+    tt = title(strcat('Рисунок А.',num2str(iter),'.- ',titleVar{j}));
+    set(tt,'Position',pos);
+    set(gca, 'XAxisLocation','top')
     legend(bbar,{'истинн. от 0','зашумл. от 0.','отфильтр. от 0.(лин.)','отфильтр. от 0.(апер.)'});
-    print(h,'-dpng',strcat('./results/',outFns{j},'_bar.png'));
+    print(h,'-dpng',strcat('./results/',num2str(iter,'%03d'),'___',outFns{j},'_bar.png'));
+    iter = iter + 1;
 end
 
 result
